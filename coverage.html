@@ -1,0 +1,3159 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>config: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/bazueva/gofermart/cmd/config/server_addr.go (83.3%)</option>
+				
+				<option value="file1">github.com/bazueva/gofermart/cmd/gophermart/config.go (0.0%)</option>
+				
+				<option value="file2">github.com/bazueva/gofermart/cmd/gophermart/main.go (0.0%)</option>
+				
+				<option value="file3">github.com/bazueva/gofermart/db/migration.go (0.0%)</option>
+				
+				<option value="file4">github.com/bazueva/gofermart/internal/app/app.go (100.0%)</option>
+				
+				<option value="file5">github.com/bazueva/gofermart/internal/context/auth.go (0.0%)</option>
+				
+				<option value="file6">github.com/bazueva/gofermart/internal/domain/entities/errors.go (0.0%)</option>
+				
+				<option value="file7">github.com/bazueva/gofermart/internal/domain/entities/validation.go (100.0%)</option>
+				
+				<option value="file8">github.com/bazueva/gofermart/internal/domain/pagination/pagination.go (92.9%)</option>
+				
+				<option value="file9">github.com/bazueva/gofermart/internal/handler/handler.go (86.1%)</option>
+				
+				<option value="file10">github.com/bazueva/gofermart/internal/helpers/number.go (93.8%)</option>
+				
+				<option value="file11">github.com/bazueva/gofermart/internal/middleware/authorization.go (100.0%)</option>
+				
+				<option value="file12">github.com/bazueva/gofermart/internal/middleware/json.go (0.0%)</option>
+				
+				<option value="file13">github.com/bazueva/gofermart/internal/middleware/logger.go (0.0%)</option>
+				
+				<option value="file14">github.com/bazueva/gofermart/internal/repository/bonus/hydrator.go (0.0%)</option>
+				
+				<option value="file15">github.com/bazueva/gofermart/internal/repository/bonus/repository.go (0.0%)</option>
+				
+				<option value="file16">github.com/bazueva/gofermart/internal/repository/db/context.go (0.0%)</option>
+				
+				<option value="file17">github.com/bazueva/gofermart/internal/repository/db/lock.go (0.0%)</option>
+				
+				<option value="file18">github.com/bazueva/gofermart/internal/repository/db/order/hydrator.go (100.0%)</option>
+				
+				<option value="file19">github.com/bazueva/gofermart/internal/repository/db/order/queries/conditions.go (100.0%)</option>
+				
+				<option value="file20">github.com/bazueva/gofermart/internal/repository/db/order/queries/count_by_user_id.go (100.0%)</option>
+				
+				<option value="file21">github.com/bazueva/gofermart/internal/repository/db/order/queries/create_order.go (100.0%)</option>
+				
+				<option value="file22">github.com/bazueva/gofermart/internal/repository/db/order/queries/create_order_withdraw.go (100.0%)</option>
+				
+				<option value="file23">github.com/bazueva/gofermart/internal/repository/db/order/queries/find_by_order_id.go (100.0%)</option>
+				
+				<option value="file24">github.com/bazueva/gofermart/internal/repository/db/order/queries/find_by_user_id.go (100.0%)</option>
+				
+				<option value="file25">github.com/bazueva/gofermart/internal/repository/db/order/queries/find_stale_orders.go (100.0%)</option>
+				
+				<option value="file26">github.com/bazueva/gofermart/internal/repository/db/order/queries/hydrator.go (100.0%)</option>
+				
+				<option value="file27">github.com/bazueva/gofermart/internal/repository/db/order/queries/update_status_and_bonus.go (100.0%)</option>
+				
+				<option value="file28">github.com/bazueva/gofermart/internal/repository/db/order/queries/user_balance_sum.go (100.0%)</option>
+				
+				<option value="file29">github.com/bazueva/gofermart/internal/repository/db/order/queries/user_balance_with_withdrawn.go (100.0%)</option>
+				
+				<option value="file30">github.com/bazueva/gofermart/internal/repository/db/order/repository.go (95.2%)</option>
+				
+				<option value="file31">github.com/bazueva/gofermart/internal/repository/db/postgres_error.go (0.0%)</option>
+				
+				<option value="file32">github.com/bazueva/gofermart/internal/repository/db/sql_wrapper.go (0.0%)</option>
+				
+				<option value="file33">github.com/bazueva/gofermart/internal/repository/db/user/queries/exist_login.go (100.0%)</option>
+				
+				<option value="file34">github.com/bazueva/gofermart/internal/repository/db/user/queries/find_by_login.go (100.0%)</option>
+				
+				<option value="file35">github.com/bazueva/gofermart/internal/repository/db/user/repository.go (100.0%)</option>
+				
+				<option value="file36">github.com/bazueva/gofermart/internal/service/order/order.go (96.6%)</option>
+				
+				<option value="file37">github.com/bazueva/gofermart/internal/service/order/order_processor.go (47.7%)</option>
+				
+				<option value="file38">github.com/bazueva/gofermart/internal/service/user/user.go (92.6%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package config
+
+import (
+        "fmt"
+        "strconv"
+        "strings"
+)
+
+type ServerAddr struct {
+        Host string
+        Port int
+}
+
+func (s *ServerAddr) UnmarshalText(text []byte) error <span class="cov0" title="0">{
+        return s.Set(string(text))
+}</span>
+
+func (s *ServerAddr) String() string <span class="cov0" title="0">{
+        return fmt.Sprintf("%s:%d", s.Host, s.Port)
+}</span>
+
+func (s *ServerAddr) Set(addr string) error <span class="cov8" title="1">{
+        value := strings.Split(addr, ":")
+        if len(value) != 2 </span><span class="cov8" title="1">{
+                return fmt.Errorf("wrong format")
+        }</span>
+
+        <span class="cov8" title="1">var err error
+        s.Port, err = strconv.Atoi(value[1])
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("wrong port - %s", err.Error())
+        }</span>
+
+        <span class="cov8" title="1">if value[0] != "" </span><span class="cov8" title="1">{
+                s.Host = value[0]
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package main
+
+import (
+        "flag"
+        "os"
+
+        configpkg "github.com/bazueva/gofermart/cmd/config"
+        "github.com/caarlos0/env/v11"
+
+        "go.uber.org/zap"
+)
+
+type config struct {
+        ServerAddr           configpkg.ServerAddr `env:"RUN_ADDRESS"`
+        DatabaseDSN          string               `env:"DATABASE_URI"`
+        SecretKey            string               `env:"SECRET_KEY"`
+        AccrualSystemAddress string               `env:"ACCRUAL_SYSTEM_ADDRESS"`
+
+        logger *zap.Logger
+}
+
+func readConfig() (config, error) <span class="cov0" title="0">{
+        cfg := config{
+                ServerAddr: configpkg.ServerAddr{
+                        Host: "localhost",
+                        Port: 8080,
+                },
+        }
+
+        err := parseFlags(&amp;cfg)
+        if err != nil </span><span class="cov0" title="0">{
+                return config{}, err
+        }</span>
+
+        <span class="cov0" title="0">err = env.Parse(&amp;cfg)
+        if err != nil </span><span class="cov0" title="0">{
+                return cfg, err
+        }</span>
+
+        <span class="cov0" title="0">return cfg, nil</span>
+}
+
+func parseFlags(config *config) error <span class="cov0" title="0">{
+        serverFlags := flag.NewFlagSet("", flag.ContinueOnError)
+        serverFlags.Var(&amp;config.ServerAddr, "a", "address http server")
+        serverFlags.StringVar(&amp;config.DatabaseDSN, "d", "", "Database DSN")
+        serverFlags.StringVar(&amp;config.SecretKey, "s", "", "Secret Key")
+        serverFlags.StringVar(&amp;config.AccrualSystemAddress, "r", "", "accrual system address")
+
+        if len(os.Args) &gt; 1 </span><span class="cov0" title="0">{
+                err := serverFlags.Parse(os.Args[1:])
+                if err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package main
+
+import (
+        "context"
+        "database/sql"
+        "fmt"
+        "log"
+        "net/http"
+        "os"
+        "os/signal"
+        "syscall"
+        "time"
+
+        _ "net/http/pprof"
+
+        dbpkg "github.com/bazueva/gofermart/db"
+        "github.com/bazueva/gofermart/internal/app"
+        handlerPkg "github.com/bazueva/gofermart/internal/handler"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/bazueva/gofermart/internal/middleware"
+        "github.com/bazueva/gofermart/internal/repository/bonus"
+        dbPkg "github.com/bazueva/gofermart/internal/repository/db"
+        "github.com/bazueva/gofermart/internal/repository/db/order"
+        "github.com/bazueva/gofermart/internal/repository/db/user"
+        orderService "github.com/bazueva/gofermart/internal/service/order"
+        userService "github.com/bazueva/gofermart/internal/service/user"
+        "github.com/go-chi/chi/v5"
+        _ "github.com/jackc/pgx/v5/stdlib"
+        "go.uber.org/zap"
+)
+
+func main() <span class="cov0" title="0">{
+        cfg := initConfig()
+
+        initLogger(&amp;cfg)
+        defer syncLogger(cfg.logger)
+
+        db := initDatabase(cfg)
+        defer closeDatabase(db)
+
+        if cfg.DatabaseDSN != "" </span><span class="cov0" title="0">{
+                if err := dbpkg.RunMigrations(db); err != nil </span><span class="cov0" title="0">{
+                        log.Fatal("Migration failed:", err)
+                }</span>
+        }
+
+        <span class="cov0" title="0">ctxWithCancel, cancel := context.WithCancel(context.Background())
+        defer cancel()
+
+        setupSignalHandler(ctxWithCancel, cancel, cfg.logger)
+
+        // Запускаем pprof сервер с graceful shutdown
+        go runPprofServer(ctxWithCancel, cfg.logger)
+
+        wrappedDB := dbPkg.NewSQLDBWrapper(db)
+        components := initComponents(cfg, wrappedDB)
+
+        // Запускаем фоновые процессоры
+        components.OrderProcessor.Start(ctxWithCancel)
+        components.OrderProcessor.StartDatabasePoller(ctxWithCancel)
+
+        startServer(ctxWithCancel, cfg, components)
+
+        // ждем 6 секунд, чтобы дать воркерам orderProcessor (у которых таймаут 5с)
+        // гарантированно завершить Graceful Shutdown перед тем, как проверять утечки памяти.
+        time.Sleep(6 * time.Second)
+
+        &lt;-ctxWithCancel.Done()
+        cfg.logger.Info("Программа завершена")</span>
+}
+
+func setupSignalHandler(ctx context.Context, cancel context.CancelFunc, logger *zap.Logger) <span class="cov0" title="0">{
+        sigCh := make(chan os.Signal, 1)
+        signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+
+        go func() </span><span class="cov0" title="0">{
+                &lt;-sigCh
+                logger.Info("Получен Ctrl+C, останавливаемся...")
+
+                cancel()
+        }</span>()
+}
+
+func initDatabase(cfg config) *sql.DB <span class="cov0" title="0">{
+        db, err := sql.Open("pgx", cfg.DatabaseDSN)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+
+        <span class="cov0" title="0">return db</span>
+}
+
+func closeDatabase(db *sql.DB) <span class="cov0" title="0">{
+        if err := db.Close(); err != nil </span><span class="cov0" title="0">{
+                log.Printf("failed to close database: %v", err)
+        }</span>
+}
+
+func syncLogger(logger *zap.Logger) <span class="cov0" title="0">{
+        defer func() </span><span class="cov0" title="0">{
+                if err := logger.Sync(); err != nil </span><span class="cov0" title="0">{
+                        log.Printf("failed to sync logger: %v", err)
+                }</span>
+        }()
+}
+
+func initLogger(cfg *config) <span class="cov0" title="0">{
+        var err error
+
+        cfg.logger, err = zap.NewProduction(zap.AddStacktrace(zap.ErrorLevel))
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+}
+
+func initConfig() config <span class="cov0" title="0">{
+        cfg, err := readConfig()
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+
+        <span class="cov0" title="0">return cfg</span>
+}
+
+func runPprofServer(ctx context.Context, logger *zap.Logger) <span class="cov0" title="0">{
+        pprofServer := &amp;http.Server{
+                Addr:         "localhost:6060",
+                Handler:      nil,
+                ReadTimeout:  5 * time.Second,
+                WriteTimeout: 10 * time.Second,
+        }
+
+        go func() </span><span class="cov0" title="0">{
+                logger.Info("pprof server started",
+                        zap.String("url", "http://localhost:6060/debug/pprof/"),
+                )
+                if err := pprofServer.ListenAndServe(); err != nil &amp;&amp; err != http.ErrServerClosed </span><span class="cov0" title="0">{
+                        logger.Error("pprof server error", zap.Error(err))
+                }</span>
+        }()
+
+        <span class="cov0" title="0">&lt;-ctx.Done()
+        logger.Info("Остановка pprof сервера...")
+
+        shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+        defer shutdownCancel()
+
+        if err := pprofServer.Shutdown(shutdownCtx); err != nil </span><span class="cov0" title="0">{
+                logger.Error("Ошибка остановки pprof сервера", zap.Error(err))
+        }</span> else<span class="cov0" title="0"> {
+                logger.Info("pprof сервер остановлен")
+        }</span>
+}
+
+func startServer(ctx context.Context, cfg config, components *AppComponents) <span class="cov0" title="0">{
+        router := setupRouter(components, cfg.logger)
+
+        server := &amp;http.Server{
+                Addr:    cfg.ServerAddr.String(),
+                Handler: router,
+        }
+
+        go func() </span><span class="cov0" title="0">{
+                cfg.logger.Info("Сервер запущен", zap.String("addr", cfg.ServerAddr.String()))
+                if err := server.ListenAndServe(); err != nil &amp;&amp; err != http.ErrServerClosed </span><span class="cov0" title="0">{
+                        cfg.logger.Error("Ошибка сервера", zap.Error(err))
+                }</span>
+        }()
+
+        <span class="cov0" title="0">&lt;-ctx.Done()
+        cfg.logger.Info("Остановка сервера...")
+
+        shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
+        defer shutdownCancel()
+
+        if err := server.Shutdown(shutdownCtx); err != nil </span><span class="cov0" title="0">{
+                cfg.logger.Error("Ошибка остановки сервера", zap.Error(err))
+        }</span>
+}
+
+func setupRouter(components *AppComponents, logger *zap.Logger) *chi.Mux <span class="cov0" title="0">{
+        router := chi.NewRouter()
+
+        router.Use(middleware.ServerLogger(logger))
+        router.Use(middleware.JSONMiddleware)
+
+        router.Post("/api/user/register", components.Handler.RegisterUser)
+        router.Post("/api/user/login", components.Handler.LoginUser)
+
+        router.Group(func(r chi.Router) </span><span class="cov0" title="0">{
+                r.Use(middleware.Authorization(components.App, logger))
+
+                r.Post("/api/user/orders", components.Handler.CreateOrder)
+                r.Get("/api/user/orders", components.Handler.UserOrdersList)
+                r.Post("/api/user/balance/withdraw", components.Handler.BalanceWithdraw)
+                r.Get("/api/user/withdrawals", components.Handler.UserWithdrawals)
+                r.Get("/api/user/balance", components.Handler.UserBalance)
+        }</span>)
+
+        <span class="cov0" title="0">return router</span>
+}
+
+type AppComponents struct {
+        UserService    *userService.UserService
+        OrderService   *orderService.Order
+        OrderProcessor *orderService.OrderProcessor
+        App            *app.App
+        Handler        *handlerPkg.Handler
+}
+
+// initComponents инициализирует все компоненты приложения
+func initComponents(cfg config, db interfaces.DB) *AppComponents <span class="cov0" title="0">{
+        // Репозитории
+        bonusRepo, err := bonus.NewRepository(
+                cfg.AccrualSystemAddress,
+                cfg.logger,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                panic(fmt.Sprintf("Failed to init bonus repository: %v", err))</span>
+        }
+        <span class="cov0" title="0">userRepo := user.NewRepository(db, cfg.logger)
+        orderRepo := order.NewRepository(db, cfg.logger)
+
+        // Воркеры
+        orderProcessor := orderService.NewOrderProcessor(bonusRepo, orderRepo, cfg.logger)
+
+        // Сервисы
+        userService := userService.NewUserService(userRepo, cfg.logger, cfg.SecretKey)
+        orderService := orderService.NewOrder(orderRepo, orderProcessor, cfg.logger)
+
+        // Приложение и хендлер
+        application := app.NewApp(userService, orderService, cfg.logger)
+        handler := handlerPkg.NewHandler(cfg.logger, application)
+
+        return &amp;AppComponents{
+                UserService:    userService,
+                OrderService:   orderService,
+                OrderProcessor: orderProcessor,
+                App:            application,
+                Handler:        handler,
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package db
+
+import (
+        "database/sql"
+
+        "github.com/golang-migrate/migrate/v4"
+        "github.com/golang-migrate/migrate/v4/database/postgres"
+        _ "github.com/golang-migrate/migrate/v4/source/file"
+)
+
+func RunMigrations(db *sql.DB) error <span class="cov0" title="0">{
+        driver, err := postgres.WithInstance(db, &amp;postgres.Config{})
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">m, err := migrate.NewWithDatabaseInstance(
+                "file://migrations",
+                "postgres",
+                driver,
+        )
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if err := m.Up(); err != nil &amp;&amp; err != migrate.ErrNoChange </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package app
+
+import (
+        "context"
+        "errors"
+
+        contextPkg "github.com/bazueva/gofermart/internal/context"
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/domain/pagination"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/bazueva/gofermart/internal/models"
+        "github.com/bazueva/gofermart/internal/models/forms"
+        "go.uber.org/zap"
+)
+
+type UserService interface {
+        Register(ctx context.Context, user forms.UserForm) (string, *entities.DomainError)
+        Login(ctx context.Context, user forms.LoginForm) (string, *entities.DomainError)
+        CheckJWTToken(token string) (int32, *entities.DomainError)
+}
+
+type OrderService interface {
+        CreateOrder(ctx context.Context, orderID string, userID int32) *entities.DomainError
+        OrdersListUser(ctx context.Context, userID int32, pagination *pagination.Pagination) ([]entities.Order, *entities.DomainError)
+        BalanceWithdraw(ctx context.Context, userID int32, withdraw entities.BalanceWithdraw) *entities.DomainError
+        OrdersWithdrawalsListUser(ctx context.Context, userID int32, newPagination *pagination.Pagination) ([]entities.Order, *entities.DomainError)
+        UserBalance(ctx context.Context, id int32) (entities.Balance, *entities.DomainError)
+}
+
+type App struct {
+        userService  UserService
+        orderService OrderService
+        logger       interfaces.Logger
+}
+
+func (a *App) UserBalance(ctx context.Context) (entities.Balance, *entities.DomainError) <span class="cov8" title="1">{
+        userID, err := a.userIDFromContext(ctx, true)
+        if err != nil </span><span class="cov8" title="1">{
+                return entities.Balance{}, err
+        }</span>
+
+        <span class="cov8" title="1">return a.orderService.UserBalance(ctx, userID)</span>
+}
+
+func (a *App) UserWithdrawals(ctx context.Context, page int32, perPage int32) ([]entities.Order, *entities.DomainError) <span class="cov8" title="1">{
+        userID, err := a.userIDFromContext(ctx, true)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return a.orderService.OrdersWithdrawalsListUser(ctx, userID, pagination.NewPagination(int64(page), int64(perPage)))</span>
+}
+
+func (a *App) BalanceWithDraw(ctx context.Context, request models.BalanceWithdrawRequest) *entities.DomainError <span class="cov8" title="1">{
+        userID, err := a.userIDFromContext(ctx, true)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return a.orderService.BalanceWithdraw(ctx, userID, entities.BalanceWithdraw{
+                Order: request.Order,
+                Sum:   request.Sum,
+        })</span>
+}
+
+func (a *App) UserOrdersList(ctx context.Context, page int32, perPage int32) ([]entities.Order, *entities.DomainError) <span class="cov8" title="1">{
+        userID, err := a.userIDFromContext(ctx, true)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return a.orderService.OrdersListUser(ctx, userID, pagination.NewPagination(int64(page), int64(perPage)))</span>
+}
+
+func (a *App) userIDFromContext(ctx context.Context, errorIfEmpty bool) (int32, *entities.DomainError) <span class="cov8" title="1">{
+        userID, ok := contextPkg.UserIDFromContext(ctx)
+        if !ok </span><span class="cov8" title="1">{
+                err := errors.New("ctx without userID")
+                a.logger.Error("ctx without userID", zap.Error(err))
+
+                return 0, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">if errorIfEmpty &amp;&amp; userID == 0 </span><span class="cov8" title="1">{
+                return 0, entities.NewUnauthorizedError(nil, "")
+        }</span>
+
+        <span class="cov8" title="1">return userID, nil</span>
+}
+
+func (a *App) CreateOrder(ctx context.Context, orderID string) *entities.DomainError <span class="cov8" title="1">{
+        userID, err := a.userIDFromContext(ctx, true)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return a.orderService.CreateOrder(ctx, orderID, userID)</span>
+}
+
+func (a *App) CheckJWTToken(token string) (int32, *entities.DomainError) <span class="cov8" title="1">{
+        return a.userService.CheckJWTToken(token)
+}</span>
+
+func (a *App) Login(ctx context.Context, request models.LoginRequest) (string, *entities.DomainError) <span class="cov8" title="1">{
+        return a.userService.Login(ctx, forms.LoginForm{
+                Login:    request.Login,
+                Password: request.Password,
+        })
+}</span>
+
+func (a *App) Register(ctx context.Context, request models.RegisterRequest) (string, *entities.DomainError) <span class="cov8" title="1">{
+        return a.userService.Register(ctx, forms.UserForm{
+                Login:    request.Login,
+                Password: request.Password,
+        })
+}</span>
+
+func NewApp(
+        userService UserService,
+        orderService OrderService,
+        logger interfaces.Logger,
+) *App <span class="cov8" title="1">{
+        return &amp;App{
+                userService:  userService,
+                orderService: orderService,
+                logger:       logger,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package context
+
+import "context"
+
+type userIDContextKey struct{}
+
+func WithUserID(ctx context.Context, userID int32) context.Context <span class="cov0" title="0">{
+        return context.WithValue(ctx, userIDContextKey{}, userID)
+}</span>
+
+func UserIDFromContext(ctx context.Context) (int32, bool) <span class="cov0" title="0">{
+        userID, ok := ctx.Value(userIDContextKey{}).(int32)
+
+        return userID, ok
+}</span>
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package entities
+
+import (
+        "github.com/samber/lo"
+)
+
+type DomainError struct {
+        ErrorType ErrorType
+        SourceErr error
+        Text      string
+}
+
+type ErrorType int
+
+const (
+        InternalServerErrorType ErrorType = iota
+        ConflictErrorType
+        BadRequestErrorType
+        UnauthorizedErrorType
+        UnprocessableEntityErrorType
+        OkEntityErrorType
+        NoContentErrorType
+        RetriableErrorType
+        PaymentRequiredErrorType
+        TooManyRequestErrorType
+)
+
+func (e *DomainError) Error() string <span class="cov0" title="0">{
+        return e.Text
+}</span>
+
+func NewInternalServerError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: InternalServerErrorType,
+                SourceErr: err,
+                Text:      lo.Ternary(text != "", text, "Internal Server Error"),
+        }
+}</span>
+
+func NewUnauthorizedError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: UnauthorizedErrorType,
+                SourceErr: err,
+                Text:      lo.Ternary(text != "", text, "пользователь не аутентифицирован"),
+        }
+}</span>
+
+func NewOkError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: OkEntityErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewUnprocessableEntity(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: UnprocessableEntityErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewConflictError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: ConflictErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewBadRequestError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: BadRequestErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewNoContentError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: NoContentErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewRetriableError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: RetriableErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewPaymentRequiredError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: PaymentRequiredErrorType,
+                SourceErr: err,
+                Text:      text,
+        }
+}</span>
+
+func NewTooManyRequestError(err error, text string) *DomainError <span class="cov0" title="0">{
+        return &amp;DomainError{
+                ErrorType: TooManyRequestErrorType,
+                SourceErr: err,
+                Text:      lo.Ternary(text != "", text, "Слишком много запросов"),
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package entities
+
+import (
+        "errors"
+        "fmt"
+        "strings"
+
+        "github.com/go-playground/validator/v10"
+)
+
+type ValidateError struct {
+        Field string
+        Error string
+}
+
+func ConvertValidatorErrors(err error) []ValidateError <span class="cov8" title="1">{
+        if err == nil </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">resultErrors := make([]ValidateError, 0, 10)
+
+        if validateErrs, ok := errors.AsType[validator.ValidationErrors](err); ok </span><span class="cov8" title="1">{
+                for _, e := range validateErrs </span><span class="cov8" title="1">{
+                        errorText := ""
+                        switch e.Tag() </span>{
+                        case "required":<span class="cov8" title="1">
+                                errorText = "Поле обязательно для заполнения"</span>
+                        case "min":<span class="cov8" title="1">
+                                errorText = fmt.Sprintf("Поле должно содержать не менее %s символов", e.Param())</span>
+                        case "max":<span class="cov8" title="1">
+                                errorText = fmt.Sprintf("Поле должно содержать не более %s символов", e.Param())</span>
+                        }
+
+                        <span class="cov8" title="1">resultErrors = append(resultErrors, ValidateError{
+                                Field: strings.ToLower(e.StructField()),
+                                Error: errorText,
+                        })</span>
+                }
+        }
+
+        <span class="cov8" title="1">return resultErrors</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package pagination
+
+const (
+        perPage20 = 20
+        perPage50 = 50
+)
+
+var perPagesAllow = map[int64]struct{}{
+        perPage20: {},
+        perPage50: {},
+}
+
+type Pagination struct {
+        page       int64
+        perPage    int64
+        totalCount int64
+}
+
+func (p *Pagination) TotalCount() int64 <span class="cov0" title="0">{
+        return p.totalCount
+}</span>
+
+func (p *Pagination) setPage(page int64) <span class="cov8" title="1">{
+        if page &lt;= 0 </span><span class="cov8" title="1">{
+                p.page = 1
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">p.page = page</span>
+}
+
+func (p *Pagination) setPerPage(perPage int64) <span class="cov8" title="1">{
+        if _, ok := perPagesAllow[perPage]; ok </span><span class="cov8" title="1">{
+                p.perPage = perPage
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">p.perPage = perPage20</span>
+}
+
+func (p *Pagination) SetTotalCount(totalCount int64) <span class="cov8" title="1">{
+        p.totalCount = totalCount
+}</span>
+
+func (p *Pagination) GetPage() int64 <span class="cov8" title="1">{
+        if p.totalCount == 0 </span><span class="cov8" title="1">{
+                return 1
+        }</span>
+
+        <span class="cov8" title="1">totalPages := p.GetTotalPages()
+
+        if p.page &gt; totalPages </span><span class="cov8" title="1">{
+                return totalPages
+        }</span>
+
+        <span class="cov8" title="1">return p.page</span>
+}
+
+func (p *Pagination) GetPerPage() int64 <span class="cov0" title="0">{
+        return p.perPage
+}</span>
+
+func (p *Pagination) GetOffset() int64 <span class="cov8" title="1">{
+        return (p.GetPage() - 1) * p.perPage
+}</span>
+
+func (p *Pagination) GetTotalPages() int64 <span class="cov8" title="1">{
+        if p.totalCount == 0 </span><span class="cov8" title="1">{
+                return 0
+        }</span>
+
+        <span class="cov8" title="1">totalPages := p.totalCount / p.perPage
+        if p.totalCount%p.perPage != 0 </span><span class="cov8" title="1">{
+                totalPages++
+        }</span>
+
+        <span class="cov8" title="1">return totalPages</span>
+}
+
+func NewPagination(
+        page int64,
+        perPage int64,
+) *Pagination <span class="cov8" title="1">{
+        pagin := &amp;Pagination{}
+        pagin.setPage(page)
+        pagin.setPerPage(perPage)
+
+        return pagin
+}</span>
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package handler
+
+import (
+        "context"
+        "encoding/json"
+        "errors"
+        "io"
+        "net/http"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/bazueva/gofermart/internal/models"
+        "github.com/spf13/cast"
+        "go.uber.org/zap"
+)
+
+type App interface {
+        Register(ctx context.Context, request models.RegisterRequest) (string, *entities.DomainError)
+        Login(ctx context.Context, request models.LoginRequest) (string, *entities.DomainError)
+        CreateOrder(ctx context.Context, id string) *entities.DomainError
+        UserOrdersList(ctx context.Context, page int32, perPage int32) ([]entities.Order, *entities.DomainError)
+        BalanceWithDraw(ctx context.Context, request models.BalanceWithdrawRequest) *entities.DomainError
+        UserWithdrawals(ctx context.Context, toInt32 int32, toInt33 int32) ([]entities.Order, *entities.DomainError)
+        UserBalance(ctx context.Context) (entities.Balance, *entities.DomainError)
+}
+
+type Handler struct {
+        logger interfaces.Logger
+        app    App
+}
+
+func NewHandler(logger interfaces.Logger, application App) *Handler <span class="cov0" title="0">{
+        return &amp;Handler{
+                logger: logger,
+                app:    application,
+        }
+}</span>
+
+func (h *Handler) LoginUser(w http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        defer func() </span><span class="cov8" title="1">{
+                if err := request.Body.Close(); err != nil </span><span class="cov0" title="0">{
+                        h.logger.Error("body close error", zap.Error(err))
+                }</span>
+        }()
+
+        <span class="cov8" title="1">var loginRequest models.LoginRequest
+
+        decoder := json.NewDecoder(request.Body)
+        err := decoder.Decode(&amp;loginRequest)
+        if err != nil </span><span class="cov8" title="1">{
+                h.errorHandler(w, err, http.StatusBadRequest)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">tokenJWT, errDomain := h.app.Login(request.Context(), loginRequest)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(w, errDomain, 0)
+
+                return
+        }</span>
+
+        // для тестов
+        <span class="cov8" title="1">w.Header().Set("Authorization", "Bearer "+tokenJWT)
+
+        w.WriteHeader(http.StatusOK)
+        _ = json.NewEncoder(w).Encode(map[string]string{
+                "token": tokenJWT,
+        })</span>
+}
+
+func (h *Handler) RegisterUser(w http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        defer func() </span><span class="cov8" title="1">{
+                if err := request.Body.Close(); err != nil </span><span class="cov0" title="0">{
+                        h.logger.Error("body close error", zap.Error(err))
+                }</span>
+        }()
+
+        <span class="cov8" title="1">var regRequest models.RegisterRequest
+
+        decoder := json.NewDecoder(request.Body)
+        err := decoder.Decode(&amp;regRequest)
+        if err != nil </span><span class="cov8" title="1">{
+                h.errorHandler(w, err, http.StatusBadRequest)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">tokenJWT, errDomain := h.app.Register(request.Context(), regRequest)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(w, errDomain, 0)
+
+                return
+        }</span>
+
+        // для тестов
+        <span class="cov8" title="1">w.Header().Set("Authorization", "Bearer "+tokenJWT)
+
+        w.WriteHeader(http.StatusOK)
+        _ = json.NewEncoder(w).Encode(map[string]string{
+                "token": tokenJWT,
+        })</span>
+}
+
+func (h *Handler) errorHandler(writer http.ResponseWriter, err error, statusCode int) <span class="cov8" title="1">{
+        if domainError, ok := errors.AsType[*entities.DomainError](err); ok </span><span class="cov8" title="1">{
+                switch domainError.ErrorType </span>{
+                case entities.ConflictErrorType:<span class="cov8" title="1">
+                        statusCode = http.StatusConflict</span>
+                case entities.BadRequestErrorType:<span class="cov8" title="1">
+                        statusCode = http.StatusBadRequest</span>
+                case entities.UnauthorizedErrorType:<span class="cov8" title="1">
+                        statusCode = http.StatusUnauthorized</span>
+                case entities.UnprocessableEntityErrorType:<span class="cov0" title="0">
+                        statusCode = http.StatusUnprocessableEntity</span>
+                case entities.OkEntityErrorType:<span class="cov8" title="1">
+                        statusCode = http.StatusOK</span>
+                case entities.PaymentRequiredErrorType:<span class="cov8" title="1">
+                        statusCode = http.StatusPaymentRequired</span>
+
+                default:<span class="cov8" title="1">
+                        statusCode = http.StatusInternalServerError</span>
+                }
+        }
+
+        <span class="cov8" title="1">writer.WriteHeader(statusCode)
+        _ = json.NewEncoder(writer).Encode(map[string]string{
+                "error": err.Error(),
+        })</span>
+}
+
+func (h *Handler) CreateOrder(writer http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        body, err := io.ReadAll(request.Body)
+        if err != nil </span><span class="cov0" title="0">{
+                h.errorHandler(writer, err, http.StatusBadRequest)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">defer func() </span><span class="cov8" title="1">{
+                _ = request.Body.Close()
+        }</span>()
+
+        <span class="cov8" title="1">orderID := string(body)
+        if orderID == "" </span><span class="cov8" title="1">{
+                h.errorHandler(writer, errors.New("не указан номер заказа"), http.StatusBadRequest)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">errDomain := h.app.CreateOrder(request.Context(), orderID)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(writer, errDomain, 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">writer.WriteHeader(http.StatusAccepted)</span>
+}
+
+func (h *Handler) UserOrdersList(writer http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        orders, errDomain := h.app.UserOrdersList(
+                request.Context(),
+                cast.ToInt32(request.URL.Query().Get("page")),
+                cast.ToInt32(request.URL.Query().Get("perPage")),
+        )
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(writer, errDomain, 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">if len(orders) == 0 </span><span class="cov8" title="1">{
+                writer.WriteHeader(http.StatusNoContent)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">result := make([]models.Order, len(orders))
+        for i, order := range orders </span><span class="cov8" title="1">{
+                result[i] = models.Order{
+                        Number:  order.OrderID,
+                        Status:  string(order.Status),
+                        Accrual: order.BonusSum,
+                        UploadedAt: func() string </span><span class="cov8" title="1">{
+                                if order.ProcessedAt != nil </span><span class="cov0" title="0">{
+                                        return order.ProcessedAt.Format("2006-01-02T15:04:05-07:00")
+                                }</span>
+
+                                <span class="cov8" title="1">return ""</span>
+                        }(),
+                }
+        }
+
+        <span class="cov8" title="1">resultJSON, err := json.Marshal(result)
+        if err != nil </span><span class="cov0" title="0">{
+                h.logger.Error("error marshal []order", zap.Error(err))
+
+                h.errorHandler(writer, entities.NewInternalServerError(err, ""), 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">writer.Write(resultJSON)</span>
+}
+
+func (h *Handler) BalanceWithdraw(writer http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        defer func() </span><span class="cov8" title="1">{
+                if err := request.Body.Close(); err != nil </span><span class="cov0" title="0">{
+                        h.logger.Error("body close error", zap.Error(err))
+                }</span>
+        }()
+
+        <span class="cov8" title="1">var balanceRequest models.BalanceWithdrawRequest
+
+        decoder := json.NewDecoder(request.Body)
+        err := decoder.Decode(&amp;balanceRequest)
+        if err != nil </span><span class="cov8" title="1">{
+                h.errorHandler(writer, err, http.StatusBadRequest)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">errDomain := h.app.BalanceWithDraw(request.Context(), balanceRequest)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(writer, errDomain, 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">writer.WriteHeader(http.StatusOK)</span>
+}
+
+func (h *Handler) UserWithdrawals(writer http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        withdrawals, errDomain := h.app.UserWithdrawals(
+                request.Context(),
+                cast.ToInt32(request.URL.Query().Get("page")),
+                cast.ToInt32(request.URL.Query().Get("perPage")),
+        )
+
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(writer, errDomain, 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">if len(withdrawals) == 0 </span><span class="cov8" title="1">{
+                writer.WriteHeader(http.StatusNoContent)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">result := make([]models.Withdrawal, len(withdrawals))
+        for i, order := range withdrawals </span><span class="cov8" title="1">{
+                result[i] = models.Withdrawal{
+                        Order: order.OrderID,
+                        Sum:   order.BonusSum * -1,
+                        ProcessedAt: func() string </span><span class="cov8" title="1">{
+                                if order.ProcessedAt != nil </span><span class="cov8" title="1">{
+                                        return order.ProcessedAt.Format("2006-01-02T15:04:05-07:00")
+                                }</span>
+
+                                <span class="cov8" title="1">return ""</span>
+                        }(),
+                }
+        }
+
+        <span class="cov8" title="1">resultJSON, err := json.Marshal(result)
+        if err != nil </span><span class="cov0" title="0">{
+                h.logger.Error("error marshal []order", zap.Error(err))
+
+                h.errorHandler(writer, entities.NewInternalServerError(err, ""), 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">writer.Write(resultJSON)</span>
+}
+
+func (h *Handler) UserBalance(writer http.ResponseWriter, request *http.Request) <span class="cov8" title="1">{
+        result, errDomain := h.app.UserBalance(request.Context())
+        if errDomain != nil </span><span class="cov8" title="1">{
+                h.errorHandler(writer, errDomain, 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">balance := models.Balance{
+                Current:   result.Balance,
+                Withdrawn: result.Withdrawn,
+        }
+
+        jsonBalance, err := json.Marshal(balance)
+        if err != nil </span><span class="cov0" title="0">{
+                h.logger.Error("error marshal balance", zap.Error(err))
+
+                h.errorHandler(writer, entities.NewInternalServerError(err, ""), 0)
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">writer.Write(jsonBalance)</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package helpers
+
+func ValidateLuhn(number string) bool <span class="cov8" title="1">{
+        if number == "" </span><span class="cov8" title="1">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">var sum int
+        isSecond := false
+
+        for i := len(number) - 1; i &gt;= 0; i-- </span><span class="cov8" title="1">{
+                ch := number[i]
+
+                if ch &lt; '0' || ch &gt; '9' </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+
+                <span class="cov8" title="1">digit := int(number[i] - '0')
+
+                if isSecond </span><span class="cov8" title="1">{
+                        digit *= 2
+                        if digit &gt; 9 </span><span class="cov0" title="0">{
+                                digit -= 9
+                        }</span>
+                }
+
+                <span class="cov8" title="1">sum += digit
+                isSecond = !isSecond</span>
+        }
+
+        <span class="cov8" title="1">return sum%10 == 0</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">package middleware
+
+import (
+        "net/http"
+        "strings"
+
+        "github.com/bazueva/gofermart/internal/context"
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+)
+
+type CheckerJWTToken interface {
+        CheckJWTToken(token string) (int32, *entities.DomainError)
+}
+
+func Authorization(checkerToken CheckerJWTToken, logger interfaces.Logger) func(next http.Handler) http.Handler <span class="cov8" title="1">{
+        return func(next http.Handler) http.Handler </span><span class="cov8" title="1">{
+                fn := func(w http.ResponseWriter, r *http.Request) </span><span class="cov8" title="1">{
+                        authHeader := r.Header.Get("Authorization")
+                        if authHeader == "" </span><span class="cov8" title="1">{
+                                http.Error(w, "пользователь не авторизован", http.StatusUnauthorized)
+                                return
+                        }</span>
+
+                        <span class="cov8" title="1">parts := strings.Split(authHeader, " ")
+                        if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" </span><span class="cov8" title="1">{
+                                http.Error(w, "невалидные данные авторизации", http.StatusBadRequest)
+                                return
+                        }</span>
+
+                        <span class="cov8" title="1">if parts[1] == "" </span><span class="cov8" title="1">{
+                                http.Error(w, "не указаны данные для авторизации", http.StatusBadRequest)
+                                return
+                        }</span>
+
+                        <span class="cov8" title="1">userID, err := checkerToken.CheckJWTToken(parts[1])
+                        if err != nil </span><span class="cov8" title="1">{
+                                if err.ErrorType == entities.UnauthorizedErrorType </span><span class="cov8" title="1">{
+                                        http.Error(w, err.Text, http.StatusUnauthorized)
+                                        return
+                                }</span>
+
+                                <span class="cov8" title="1">http.Error(w, err.Text, http.StatusInternalServerError)
+                                return</span>
+                        }
+
+                        <span class="cov8" title="1">auth := context.WithUserID(r.Context(), userID)
+
+                        next.ServeHTTP(w, r.WithContext(auth))</span>
+                }
+
+                <span class="cov8" title="1">return http.HandlerFunc(fn)</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">package middleware
+
+import "net/http"
+
+func JSONMiddleware(next http.Handler) http.Handler <span class="cov0" title="0">{
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                w.Header().Set("Content-Type", "application/json")
+
+                next.ServeHTTP(w, r)
+        }</span>)
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package middleware
+
+import (
+        "net/http"
+        "time"
+
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/go-chi/chi/v5/middleware"
+        "go.uber.org/zap"
+)
+
+func ServerLogger(logger interfaces.Logger) func(next http.Handler) http.Handler <span class="cov0" title="0">{
+        return func(next http.Handler) http.Handler </span><span class="cov0" title="0">{
+                fn := func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                        start := time.Now()
+
+                        ww := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+
+                        next.ServeHTTP(ww, r)
+
+                        end := time.Since(start)
+
+                        logger.Info("request data",
+                                zap.String("uri", r.RequestURI),
+                                zap.String("method", r.Method),
+                                zap.Duration("time", end),
+                                zap.Int("statusCode", ww.Status()),
+                                zap.Int("bytes", ww.BytesWritten()),
+                        )
+                }</span>
+
+                <span class="cov0" title="0">return http.HandlerFunc(fn)</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">package bonus
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+)
+
+func hydrateOrdersStatusToDomain(status string) entities.OrderStatus <span class="cov0" title="0">{
+        switch status </span>{
+        case "REGISTERED":<span class="cov0" title="0">
+                return entities.OrdersStatusNew</span>
+        case "PROCESSING":<span class="cov0" title="0">
+                return entities.OrdersStatusProcessing</span>
+        case "INVALID":<span class="cov0" title="0">
+                return entities.OrdersStatusInvalid</span>
+        case "PROCESSED":<span class="cov0" title="0">
+                return entities.OrdersStatusProcessed</span>
+        default:<span class="cov0" title="0">
+                return entities.OrdersStatusNew</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package bonus
+
+import (
+        "context"
+        "encoding/json"
+        "errors"
+        "fmt"
+        "net/http"
+        "strconv"
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/go-resty/resty/v2"
+        "go.uber.org/zap"
+)
+
+type repository struct {
+        client *resty.Client
+        addr   string
+        logger interfaces.Logger
+}
+
+type order struct {
+        Order   string  `json:"order"`
+        Status  string  `json:"status"`
+        Accrual float64 `json:"accrual"`
+}
+
+func (r *repository) GetOrder(ctx context.Context, orderID string) (*entities.Order, *entities.DomainError) <span class="cov0" title="0">{
+        url := fmt.Sprintf("%s/api/orders/%s", r.addr, orderID)
+
+        response, err := r.client.R().
+                SetContext(ctx).
+                SetHeader("Content-Type", "application/json").
+                Get(url)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("bonus repository error GetOrder", zap.Error(err), zap.String("order_id", orderID))
+
+                return nil, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov0" title="0">domainErr := r.checkResponseStatus(response.StatusCode(), orderID)
+        if domainErr != nil </span><span class="cov0" title="0">{
+                return nil, domainErr
+        }</span>
+
+        <span class="cov0" title="0">var result order
+        err = json.Unmarshal(response.Body(), &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                r.logger.Error("json unmarshal error", zap.Error(err), zap.String("order_id", orderID))
+
+                return nil, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov0" title="0">if result.Order != orderID || result.Order == "" </span><span class="cov0" title="0">{
+                err = errors.New("заказ не соответствует запрошенному")
+                r.logger.Error("неверный заказ",
+                        zap.Error(err),
+                        zap.String("order_id", orderID),
+                        zap.String("result.order_id", result.Order),
+                )
+
+                return nil, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov0" title="0">return &amp;entities.Order{
+                OrderID:  result.Order,
+                Status:   hydrateOrdersStatusToDomain(result.Status),
+                BonusSum: result.Accrual,
+        }, nil</span>
+}
+
+func (r *repository) checkResponseStatus(code int, orderID string) *entities.DomainError <span class="cov0" title="0">{
+        switch code </span>{
+        case http.StatusNoContent:<span class="cov0" title="0">
+                r.logger.Error("Заказ не найден",
+                        zap.String("order_id", orderID),
+                )
+
+                return entities.NewNoContentError(nil, "Заказ не найден")</span>
+        case http.StatusOK:<span class="cov0" title="0"></span>
+        default:<span class="cov0" title="0">
+                r.logger.Error("Ошибка получения заказа из bonus",
+                        zap.String("order_id", orderID),
+                        zap.Int("status_code", code),
+                )
+
+                return entities.NewInternalServerError(
+                        nil,
+                        fmt.Sprintf("Получени статус из bonus - %d", code),
+                )</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func NewRepository(addr string, logger interfaces.Logger) (*repository, error) <span class="cov0" title="0">{
+        if addr == "" </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("не указан адрес сервера")
+        }</span>
+
+        <span class="cov0" title="0">return &amp;repository{
+                client: createClient(logger),
+                logger: logger,
+                addr:   addr,
+        }, nil</span>
+}
+
+func createClient(logger interfaces.Logger) *resty.Client <span class="cov0" title="0">{
+        return resty.New().
+                SetRetryCount(3).
+                SetRetryAfter(func(client *resty.Client, response *resty.Response) (time.Duration, error) </span><span class="cov0" title="0">{
+                        if response != nil &amp;&amp; response.StatusCode() == http.StatusTooManyRequests </span><span class="cov0" title="0">{
+                                if retryAfterHeader := response.Header().Get("Retry-After"); retryAfterHeader != "" </span><span class="cov0" title="0">{
+                                        if seconds, err := strconv.Atoi(retryAfterHeader); err == nil &amp;&amp; seconds &gt; 0 </span><span class="cov0" title="0">{
+                                                logger.Warn("Сервер ответил 429. Ждем согласно Retry-After",
+                                                        zap.Int("seconds", seconds),
+                                                        zap.String("url", response.Request.URL),
+                                                )
+
+                                                return time.Duration(seconds) * time.Second, nil
+                                        }</span>
+                                }
+                        }
+
+                        <span class="cov0" title="0">attempt := response.Request.Attempt
+
+                        return time.Duration(2*attempt-1) * time.Second, nil</span>
+                }).
+                AddRetryCondition(func(r *resty.Response, err error) bool <span class="cov0" title="0">{
+                        if err != nil </span><span class="cov0" title="0">{
+                                return true
+                        }</span>
+
+                        <span class="cov0" title="0">return r.StatusCode() == http.StatusTooManyRequests</span>
+                }).
+                SetRetryWaitTime(1 * time.Second).
+                SetRetryMaxWaitTime(5 * time.Second).
+                AddRetryHook(
+                        func(r *resty.Response, err error) <span class="cov0" title="0">{
+                                logger.Info("Повторная попытка...",
+                                        zap.Error(err),
+                                        zap.String("url", r.Request.URL),
+                                )
+                        }</span>,
+                )
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package db
+
+import (
+        "context"
+
+        "github.com/bazueva/gofermart/internal/interfaces"
+)
+
+type txContextKey struct{}
+
+func WithTx(ctx context.Context, tx interfaces.Tx) context.Context <span class="cov0" title="0">{
+        return context.WithValue(ctx, txContextKey{}, tx)
+}</span>
+
+func TxFromContext(ctx context.Context) (interfaces.Tx, bool) <span class="cov0" title="0">{
+        tx, ok := ctx.Value(txContextKey{}).(interfaces.Tx)
+
+        return tx, ok
+}</span>
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package db
+
+import (
+        "context"
+
+        "github.com/bazueva/gofermart/internal/interfaces"
+)
+
+func TryLock(
+        ctx context.Context,
+        executor interfaces.Executor,
+        lockType int64,
+        key int64,
+) (bool, error) <span class="cov0" title="0">{
+        var ok bool
+
+        err := executor.QueryRowContext(
+                ctx,
+                "SELECT pg_try_advisory_xact_lock($1, $2);",
+                lockType,
+                key,
+        ).Scan(&amp;ok)
+
+        if err != nil </span><span class="cov0" title="0">{
+                return false, err
+        }</span>
+
+        <span class="cov0" title="0">return ok, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file18" style="display: none">package order
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        dbModel "github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
+)
+
+func hydrateOrdersStatusToDomain(status dbModel.OrdersStatus) entities.OrderStatus <span class="cov8" title="1">{
+        switch status </span>{
+        case dbModel.OrdersStatus_New:<span class="cov8" title="1">
+                return entities.OrdersStatusNew</span>
+        case dbModel.OrdersStatus_Processing:<span class="cov8" title="1">
+                return entities.OrdersStatusProcessing</span>
+        case dbModel.OrdersStatus_Invalid:<span class="cov8" title="1">
+                return entities.OrdersStatusInvalid</span>
+        case dbModel.OrdersStatus_Processed:<span class="cov8" title="1">
+                return entities.OrdersStatusProcessed</span>
+        default:<span class="cov8" title="1">
+                return entities.OrdersStatusNew</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file19" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+        "github.com/samber/lo"
+)
+
+func buildOrderFilterCondition(filter entities.OrderFilter) postgres.BoolExpression <span class="cov8" title="1">{
+        condition := table.Orders.UserID.EQ(postgres.Int32(filter.UserID))
+
+        if len(filter.Statuses) &gt; 0 </span><span class="cov8" title="1">{
+                statusesArgs := lo.Map(filter.Statuses, func(item entities.OrderStatus, _ int) postgres.Expression </span><span class="cov8" title="1">{
+                        return hydrateDomainToOrdersStatusEnum(item)
+                }</span>)
+
+                <span class="cov8" title="1">condition = condition.AND(table.Orders.Status.IN(statusesArgs...))</span>
+        }
+
+        <span class="cov8" title="1">if filter.OrderType != nil </span><span class="cov8" title="1">{
+                switch *filter.OrderType </span>{
+                case entities.OrderFilterAddBalanceType:<span class="cov8" title="1">
+                        condition = condition.AND(
+                                table.Orders.BonusSum.GT_EQ(postgres.Float(0)).
+                                        OR(table.Orders.BonusSum.IS_NULL()),
+                        )</span>
+                case entities.OrderFilterWriteOffBalanceType:<span class="cov8" title="1">
+                        condition = condition.AND(
+                                table.Orders.BonusSum.LT(postgres.Float(0)),
+                        )</span>
+                }
+        }
+
+        <span class="cov8" title="1">return condition</span>
+}
+</pre>
+		
+		<pre class="file" id="file20" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewCountByUserID(filter entities.OrderFilter) postgres.SelectStatement <span class="cov8" title="1">{
+        return postgres.SELECT(
+                postgres.COUNT(table.Orders.ID).AS("count"),
+        ).FROM(table.Orders).
+                WHERE(buildOrderFilterCondition(filter))
+}</span>
+</pre>
+		
+		<pre class="file" id="file21" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewCreateOrder(orderID string, userID int32, status entities.OrderStatus) postgres.InsertStatement <span class="cov8" title="1">{
+        return table.Orders.
+                INSERT(
+                        table.Orders.OrderID,
+                        table.Orders.UserID,
+                        table.Orders.Status,
+                ).
+                VALUES(
+                        orderID,
+                        postgres.Int32(userID),
+                        hydrateDomainToOrdersStatusEnum(status),
+                ).
+                RETURNING(table.Orders.ID.AS("id"))
+}</span>
+</pre>
+		
+		<pre class="file" id="file22" style="display: none">package queries
+
+import (
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewCreateOrderWithdraw(
+        orderID string,
+        userID int32,
+        bonusSum float64,
+        status entities.OrderStatus,
+) postgres.InsertStatement <span class="cov8" title="1">{
+        return table.Orders.
+                INSERT(
+                        table.Orders.OrderID,
+                        table.Orders.UserID,
+                        table.Orders.Status,
+                        table.Orders.BonusSum,
+                        table.Orders.ProcessedAt,
+                ).
+                VALUES(
+                        orderID,
+                        postgres.Int32(userID),
+                        hydrateDomainToOrdersStatusEnum(status),
+                        postgres.Double(bonusSum),
+                        postgres.TimestampzT(time.Now()),
+                ).
+                RETURNING(table.Orders.ID.AS("id"))
+}</span>
+</pre>
+		
+		<pre class="file" id="file23" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewFindByOrderID(orderID string) postgres.SelectStatement <span class="cov8" title="1">{
+        return postgres.SELECT(
+                table.Orders.ID,
+                table.Orders.OrderID,
+                table.Orders.Status,
+                table.Orders.UserID,
+                table.Orders.CreatedAt,
+        ).FROM(table.Orders).
+                WHERE(table.Orders.OrderID.EQ(postgres.String(orderID)))
+}</span>
+</pre>
+		
+		<pre class="file" id="file24" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewFindByUserID(filter entities.OrderFilter, limit, offset int64) postgres.SelectStatement <span class="cov8" title="1">{
+        query := postgres.SELECT(
+                table.Orders.ID,
+                table.Orders.OrderID,
+                table.Orders.Status,
+                table.Orders.UserID,
+                table.Orders.CreatedAt,
+                table.Orders.ProcessedAt,
+                table.Orders.BonusSum,
+        ).FROM(table.Orders).
+                WHERE(buildOrderFilterCondition(filter)).
+                ORDER_BY(table.Orders.CreatedAt.DESC()).
+                LIMIT(limit).
+                OFFSET(offset)
+
+        return query
+}</span>
+</pre>
+		
+		<pre class="file" id="file25" style="display: none">package queries
+
+import (
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+        "github.com/samber/lo"
+)
+
+func NewFindStaleOrders(statuses []entities.OrderStatus, limit int64) postgres.SelectStatement <span class="cov8" title="1">{
+        staleThreshold := time.Now().Add(-2 * time.Minute)
+
+        statusesArgs := lo.Map(statuses, func(item entities.OrderStatus, index int) postgres.Expression </span><span class="cov8" title="1">{
+                return hydrateDomainToOrdersStatusEnum(item)
+        }</span>)
+
+        <span class="cov8" title="1">return postgres.
+                SELECT(table.Orders.OrderID).
+                FROM(table.Orders).
+                WHERE(
+                        table.Orders.Status.IN(statusesArgs...).
+                                AND(
+                                        table.Orders.CreatedAt.LT(postgres.TimestampzT(staleThreshold)),
+                                ).AND(
+                                table.Orders.NextCheckAt.IS_NULL().
+                                        OR(
+                                                table.Orders.NextCheckAt.LT(
+                                                        postgres.TimestampzT(time.Now()),
+                                                ),
+                                        ),
+                        ),
+                ).
+                ORDER_BY(table.Orders.CreatedAt.ASC()).
+                LIMIT(limit)</span>
+}
+</pre>
+		
+		<pre class="file" id="file26" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/enum"
+        dbModel "github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func hydrateDomainToOrdersStatusEnum(status entities.OrderStatus) postgres.Expression <span class="cov8" title="1">{
+        switch status </span>{
+        case entities.OrdersStatusNew:<span class="cov8" title="1">
+                return enum.OrdersStatus.New</span>
+        case entities.OrdersStatusProcessing:<span class="cov8" title="1">
+                return enum.OrdersStatus.Processing</span>
+        case entities.OrdersStatusInvalid:<span class="cov8" title="1">
+                return enum.OrdersStatus.Invalid</span>
+        case entities.OrdersStatusProcessed:<span class="cov8" title="1">
+                return enum.OrdersStatus.Processed</span>
+        default:<span class="cov8" title="1">
+                return enum.OrdersStatus.New</span>
+        }
+}
+
+func hydrateDomainToOrdersStatus(status entities.OrderStatus) dbModel.OrdersStatus <span class="cov8" title="1">{
+        switch status </span>{
+        case entities.OrdersStatusNew:<span class="cov8" title="1">
+                return dbModel.OrdersStatus_New</span>
+        case entities.OrdersStatusProcessing:<span class="cov8" title="1">
+                return dbModel.OrdersStatus_Processing</span>
+        case entities.OrdersStatusInvalid:<span class="cov8" title="1">
+                return dbModel.OrdersStatus_Invalid</span>
+        case entities.OrdersStatusProcessed:<span class="cov8" title="1">
+                return dbModel.OrdersStatus_Processed</span>
+        default:<span class="cov8" title="1">
+                return dbModel.OrdersStatus(status)</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file27" style="display: none">package queries
+
+import (
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        dbModel "github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewUpdateStatusAndBonus(
+        orderID string,
+        status entities.OrderStatus,
+        bonusSum float64,
+        nextCheckAt *time.Time,
+) postgres.UpdateStatement <span class="cov8" title="1">{
+        now := time.Now()
+
+        columns := postgres.ColumnList{
+                table.Orders.BonusSum,
+                table.Orders.UpdatedAt,
+                table.Orders.NextCheckAt,
+        }
+
+        if status == entities.OrdersStatusProcessed </span><span class="cov8" title="1">{
+                columns = append(columns, table.Orders.ProcessedAt)
+        }</span>
+
+        <span class="cov8" title="1">if status != "" </span><span class="cov8" title="1">{
+                columns = append(columns, table.Orders.Status)
+        }</span>
+
+        <span class="cov8" title="1">model := dbModel.Orders{
+                Status:      hydrateDomainToOrdersStatus(status),
+                BonusSum:    new(bonusSum),
+                ProcessedAt: &amp;now,
+                UpdatedAt:   &amp;now,
+                NextCheckAt: nextCheckAt,
+        }
+
+        return table.Orders.
+                UPDATE(columns).
+                MODEL(model).
+                WHERE(table.Orders.OrderID.EQ(postgres.String(orderID)))</span>
+}
+</pre>
+		
+		<pre class="file" id="file28" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/enum"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewUserBalanceSum(userID int32) postgres.SelectStatement <span class="cov8" title="1">{
+        return postgres.SELECT(
+                postgres.COALESCE(
+                        postgres.SUM(table.Orders.BonusSum),
+                        postgres.Float(0),
+                ).AS("sum"),
+        ).FROM(table.Orders).
+                WHERE(
+                        table.Orders.UserID.EQ(postgres.Int32(userID)).
+                                AND(table.Orders.Status.EQ(enum.OrdersStatus.Processed)),
+                )
+}</span>
+</pre>
+		
+		<pre class="file" id="file29" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/enum"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewUserBalanceWithWithdrawn(userID int32) postgres.SelectStatement <span class="cov8" title="1">{
+        sumWithdrawals := postgres.COALESCE(
+                postgres.SUM(
+                        postgres.CASE().WHEN(table.Orders.BonusSum.LT(postgres.Float(0))).
+                                THEN(table.Orders.BonusSum).
+                                ELSE(postgres.Float(0)),
+                ),
+                postgres.Float(0),
+        )
+
+        return postgres.SELECT(
+                postgres.COALESCE(
+                        postgres.SUM(table.Orders.BonusSum),
+                        postgres.Float(0),
+                ).AS("balance"),
+                postgres.FloatExp(sumWithdrawals).
+                        MUL(postgres.Float(-1)).
+                        AS("withdrawn"),
+        ).FROM(table.Orders).
+                WHERE(
+                        table.Orders.UserID.EQ(postgres.Int32(userID)).
+                                AND(table.Orders.Status.EQ(enum.OrdersStatus.Processed)),
+                )
+}</span>
+</pre>
+		
+		<pre class="file" id="file30" style="display: none">package order
+
+import (
+        "context"
+        "errors"
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        dbPkg "github.com/bazueva/gofermart/internal/repository/db"
+        "github.com/bazueva/gofermart/internal/repository/db/order/queries"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
+        "github.com/go-jet/jet/v2/qrm"
+        "github.com/samber/lo"
+        "go.uber.org/zap"
+)
+
+const (
+        defaultTimeout = 1 * time.Second
+)
+
+type repository struct {
+        db              interfaces.DB
+        logger          interfaces.Logger
+        errorClassifier *dbPkg.PostgresErrorClassifier
+}
+
+func (r *repository) UserBalanceWithWithdrawn(ctx context.Context, userID int32) (entities.Balance, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result struct {
+                Balance   float64
+                Withdrawn float64
+        }
+
+        err := queries.NewUserBalanceWithWithdrawn(userID).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+
+        if err != nil &amp;&amp; !errors.Is(err, qrm.ErrNoRows) </span><span class="cov8" title="1">{
+                r.logger.Error("error repository UserBalance", zap.Error(err))
+
+                return entities.Balance{}, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return entities.Balance{
+                Balance:   result.Balance,
+                Withdrawn: result.Withdrawn,
+        }, nil</span>
+}
+
+func (r *repository) CreateOrderWithWithdraw(ctx context.Context, userID int32, orderID string, bonusSum float64) *entities.DomainError <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        _, err := queries.NewCreateOrderWithdraw(
+                orderID,
+                userID,
+                bonusSum*-1,
+                entities.OrdersStatusProcessed,
+        ).
+                ExecContext(ctxWithTimeout, r.executor(ctxWithTimeout))
+        if err != nil </span><span class="cov8" title="1">{
+                r.logger.Error("error repository CreateOrderWithWithdraw", zap.Error(err))
+
+                return entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *repository) executor(ctx context.Context) interfaces.Executor <span class="cov8" title="1">{
+        if tx, ok := dbPkg.TxFromContext(ctx); ok </span><span class="cov0" title="0">{
+                return tx
+        }</span>
+
+        <span class="cov8" title="1">return r.db</span>
+}
+
+func (r *repository) UserBalance(ctx context.Context, userID int32) (float64, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result struct {
+                Sum float64
+        }
+
+        err := queries.NewUserBalanceSum(userID).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+
+        if err != nil &amp;&amp; !errors.Is(err, qrm.ErrNoRows) </span><span class="cov8" title="1">{
+                r.logger.Error("error repository UserBalance", zap.Error(err))
+
+                return 0, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return result.Sum, nil</span>
+}
+
+func (r *repository) FindStaleOrders(ctx context.Context, statuses []entities.OrderStatus, limit int64) ([]string, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result []model.Orders
+
+        err := queries.NewFindStaleOrders(statuses, limit).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+        if err != nil &amp;&amp; !errors.Is(err, qrm.ErrNoRows) </span><span class="cov8" title="1">{
+                r.logger.Error("error repository FindStaleOrders", zap.Error(err))
+
+                return nil, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return lo.Map(result, func(item model.Orders, index int) string </span><span class="cov8" title="1">{
+                return item.OrderID
+        }</span>), nil
+}
+
+func (r *repository) UpdateStatusAndBonus(
+        ctx context.Context,
+        order entities.Order,
+) *entities.DomainError <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        _, err := queries.
+                NewUpdateStatusAndBonus(order.OrderID, order.Status, order.BonusSum, order.NextCheckAt).
+                ExecContext(ctxWithTimeout, r.executor(ctxWithTimeout))
+        if err != nil </span><span class="cov8" title="1">{
+                r.logger.Error("error repository UpdateStatusAndBonus", zap.Error(err))
+                if r.errorClassifier.ClassifyRetry(err) == dbPkg.Retriable </span><span class="cov0" title="0">{
+                        return entities.NewRetriableError(err, "")
+                }</span>
+
+                <span class="cov8" title="1">return entities.NewInternalServerError(err, "")</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *repository) CountOrdersByUserID(ctx context.Context, filter entities.OrderFilter) (int32, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result struct {
+                Count int32
+        }
+
+        err := queries.NewCountByUserID(filter).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+        if err != nil </span><span class="cov8" title="1">{
+                r.logger.Error("error repository FindByOrderID", zap.Error(err))
+
+                return 0, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return result.Count, nil</span>
+}
+
+func (r *repository) FindByUserID(
+        ctx context.Context,
+        filter entities.OrderFilter,
+        limit int64,
+        offset int64,
+) ([]entities.Order, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result []model.Orders
+
+        err := queries.NewFindByUserID(filter, limit, offset).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+        if err != nil &amp;&amp; !errors.Is(err, qrm.ErrNoRows) </span><span class="cov8" title="1">{
+                r.logger.Error("error repository FindByOrderID", zap.Error(err))
+
+                return nil, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return lo.Map(result, func(item model.Orders, index int) entities.Order </span><span class="cov8" title="1">{
+                return entities.Order{
+                        ID:          item.ID,
+                        OrderID:     item.OrderID,
+                        Status:      hydrateOrdersStatusToDomain(item.Status),
+                        UserID:      item.UserID,
+                        CreatedAt:   item.CreatedAt,
+                        ProcessedAt: item.ProcessedAt,
+                        BonusSum: func() float64 </span><span class="cov8" title="1">{
+                                if item.BonusSum != nil </span><span class="cov0" title="0">{
+                                        return *item.BonusSum
+                                }</span>
+
+                                <span class="cov8" title="1">return 0</span>
+                        }(),
+                }
+        }), nil
+}
+
+func (r *repository) CreateOrder(ctx context.Context, orderID string, userID int32, status entities.OrderStatus) *entities.DomainError <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result struct {
+                ID int32
+        }
+        err := queries.NewCreateOrder(orderID, userID, status).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+        if err != nil </span><span class="cov8" title="1">{
+                r.logger.Error("error repository CreateOrder", zap.Error(err))
+
+                return entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *repository) FindByOrderID(ctx context.Context, orderID string) (*entities.Order, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result model.Orders
+
+        err := queries.NewFindByOrderID(orderID).
+                QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &amp;result)
+        if err != nil &amp;&amp; !errors.Is(err, qrm.ErrNoRows) </span><span class="cov8" title="1">{
+                r.logger.Error("error repository FindByOrderID", zap.Error(err))
+
+                return nil, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">if result.ID == 0 </span><span class="cov8" title="1">{
+                return nil, nil
+        }</span>
+
+        <span class="cov8" title="1">return &amp;entities.Order{
+                ID:        result.ID,
+                OrderID:   result.OrderID,
+                Status:    hydrateOrdersStatusToDomain(result.Status),
+                UserID:    result.UserID,
+                CreatedAt: result.CreatedAt,
+        }, nil</span>
+}
+
+func (r *repository) BeginTransaction(ctx context.Context) (interfaces.Tx, error) <span class="cov0" title="0">{
+        return r.db.BeginTx(ctx, nil)
+}</span>
+
+func NewRepository(db interfaces.DB, logger interfaces.Logger) *repository <span class="cov8" title="1">{
+        return &amp;repository{
+                db:              db,
+                logger:          logger,
+                errorClassifier: dbPkg.NewPostgresErrorClassifier(),
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file31" style="display: none">package db
+
+import (
+        "errors"
+
+        "github.com/jackc/pgerrcode"
+        "github.com/jackc/pgx/v5/pgconn"
+        "github.com/samber/lo"
+)
+
+type PGErrorClassification int
+
+const (
+        NonRetriable PGErrorClassification = iota
+
+        Retriable
+)
+
+type PostgresErrorClassifier struct {
+}
+
+func NewPostgresErrorClassifier() *PostgresErrorClassifier <span class="cov0" title="0">{
+        return &amp;PostgresErrorClassifier{}
+}</span>
+
+func (pe *PostgresErrorClassifier) ClassifyRetry(err error) PGErrorClassification <span class="cov0" title="0">{
+        if err == nil </span><span class="cov0" title="0">{
+                return NonRetriable
+        }</span>
+
+        <span class="cov0" title="0">var connectErr *pgconn.ConnectError
+        if errors.As(err, &amp;connectErr) </span><span class="cov0" title="0">{
+                return Retriable
+        }</span>
+
+        <span class="cov0" title="0">var pgError *pgconn.PgError
+        if errors.As(err, &amp;pgError) </span><span class="cov0" title="0">{
+                return ClassifyPgError(pgError)
+        }</span>
+
+        <span class="cov0" title="0">return NonRetriable</span>
+}
+
+func ClassifyPgError(err *pgconn.PgError) PGErrorClassification <span class="cov0" title="0">{
+        if pgerrcode.IsConnectionException(err.Code) </span><span class="cov0" title="0">{
+                return Retriable
+        }</span>
+
+        <span class="cov0" title="0">if lo.Contains([]string{
+                pgerrcode.SerializationFailure,
+                pgerrcode.DeadlockDetected,
+                pgerrcode.AdminShutdown,
+                pgerrcode.TooManyConnections,
+                pgerrcode.QueryCanceled,
+                pgerrcode.IOError,
+        }, err.Code) </span><span class="cov0" title="0">{
+                return Retriable
+        }</span>
+
+        <span class="cov0" title="0">return NonRetriable</span>
+}
+</pre>
+		
+		<pre class="file" id="file32" style="display: none">package db
+
+import (
+        "context"
+        "database/sql"
+
+        "github.com/bazueva/gofermart/internal/interfaces"
+)
+
+type SQLDBWrapper struct {
+        *sql.DB
+}
+
+func NewSQLDBWrapper(db *sql.DB) interfaces.DB <span class="cov0" title="0">{
+        return &amp;SQLDBWrapper{db}
+}</span>
+
+func (w *SQLDBWrapper) BeginTx(ctx context.Context, opts *sql.TxOptions) (interfaces.Tx, error) <span class="cov0" title="0">{
+        tx, err := w.DB.BeginTx(ctx, opts)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov0" title="0">return tx, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file33" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewExistLogin(login string) postgres.SelectStatement <span class="cov8" title="1">{
+        return postgres.SELECT(
+                postgres.EXISTS(
+                        postgres.SELECT(
+                                table.Users.Login,
+                        ).
+                                FROM(table.Users).
+                                WHERE(table.Users.Login.EQ(postgres.String(login))),
+                ).AS("exists"),
+        )
+}</span>
+</pre>
+		
+		<pre class="file" id="file34" style="display: none">package queries
+
+import (
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/postgres"
+)
+
+func NewFindByLogin(login string) postgres.SelectStatement <span class="cov8" title="1">{
+        return postgres.
+                SELECT(
+                        table.Users.ID,
+                        table.Users.Login,
+                        table.Users.PasswordHash,
+                ).
+                FROM(table.Users).
+                WHERE(postgres.AND(
+                        table.Users.Login.EQ(postgres.String(login)),
+                )).
+                LIMIT(1)
+}</span>
+</pre>
+		
+		<pre class="file" id="file35" style="display: none">package user
+
+import (
+        "context"
+        "errors"
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/bazueva/gofermart/internal/repository/db/user/queries"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
+        "github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
+        "github.com/go-jet/jet/v2/qrm"
+        "go.uber.org/zap"
+)
+
+type repository struct {
+        db     interfaces.DB
+        logger interfaces.Logger
+}
+
+func (r *repository) FindByLogin(ctx context.Context, login string) (entities.User, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var result model.Users
+
+        err := queries.NewFindByLogin(login).
+                QueryContext(ctxWithTimeout, r.db, &amp;result)
+        if err != nil &amp;&amp; !errors.Is(err, qrm.ErrNoRows) </span><span class="cov8" title="1">{
+                r.logger.Error("error repository FindByLoginPassword", zap.Error(err))
+
+                return entities.User{}, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return entities.User{
+                ID:           result.ID,
+                Login:        result.Login,
+                PasswordHash: result.PasswordHash,
+        }, nil</span>
+}
+
+const (
+        defaultTimeout = 1 * time.Second
+)
+
+func (r *repository) CreateUser(ctx context.Context, user entities.User) (int32, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        query := table.Users.
+                INSERT(table.Users.Login, table.Users.PasswordHash).
+                VALUES(user.Login, user.PasswordHash).
+                RETURNING(table.Users.ID.AS("id"))
+
+        var result struct {
+                ID int32
+        }
+        err := query.QueryContext(ctxWithTimeout, r.db, &amp;result)
+        if err != nil </span><span class="cov8" title="1">{
+                r.logger.Error("error repository CreateUser", zap.Error(err))
+
+                return 0, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return result.ID, nil</span>
+}
+
+func (r *repository) ExistLogin(ctx context.Context, login string) (bool, *entities.DomainError) <span class="cov8" title="1">{
+        ctxWithTimeout, cancel := context.WithTimeout(ctx, defaultTimeout)
+        defer cancel()
+
+        var response struct {
+                Exists bool
+        }
+        err := queries.NewExistLogin(login).
+                QueryContext(ctxWithTimeout, r.db, &amp;response)
+        if err != nil </span><span class="cov8" title="1">{
+                r.logger.Error("error ExistLogin", zap.Error(err))
+
+                return false, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return response.Exists, nil</span>
+}
+
+func NewRepository(db interfaces.DB, logger interfaces.Logger) *repository <span class="cov8" title="1">{
+        return &amp;repository{
+                db:     db,
+                logger: logger,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file36" style="display: none">package order
+
+import (
+        "context"
+        "strings"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/domain/pagination"
+        "github.com/bazueva/gofermart/internal/helpers"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        dbPkg "github.com/bazueva/gofermart/internal/repository/db"
+        "go.uber.org/zap"
+)
+
+type Repository interface {
+        FindByOrderID(ctx context.Context, orderID string) (*entities.Order, *entities.DomainError)
+        CreateOrder(ctx context.Context, orderID string, userID int32, status entities.OrderStatus) *entities.DomainError
+        FindByUserID(ctx context.Context, filter entities.OrderFilter, limit int64, offset int64) ([]entities.Order, *entities.DomainError)
+        CountOrdersByUserID(ctx context.Context, orderFilter entities.OrderFilter) (int32, *entities.DomainError)
+        UserBalance(ctx context.Context, id int32) (float64, *entities.DomainError)
+        CreateOrderWithWithdraw(ctx context.Context, userID int32, orderID string, bonusSum float64) *entities.DomainError
+        BeginTransaction(ctx context.Context) (interfaces.Tx, error)
+        UserBalanceWithWithdrawn(ctx context.Context, id int32) (entities.Balance, *entities.DomainError)
+}
+
+type OrderQueue interface {
+        AddOrderIDToQueue(orderID string)
+}
+
+type Order struct {
+        repository Repository
+        logger     interfaces.Logger
+        orderQueue OrderQueue
+}
+
+func (o *Order) UserBalance(ctx context.Context, userID int32) (entities.Balance, *entities.DomainError) <span class="cov0" title="0">{
+        return o.repository.UserBalanceWithWithdrawn(ctx, userID)
+}</span>
+
+func (o *Order) OrdersWithdrawalsListUser(
+        ctx context.Context,
+        userID int32,
+        pagination *pagination.Pagination,
+) ([]entities.Order, *entities.DomainError) <span class="cov8" title="1">{
+        ordersFilter := entities.OrderFilter{UserID: userID, OrderType: new(entities.OrderFilterWriteOffBalanceType)}
+
+        countOrders, err := o.repository.CountOrdersByUserID(ctx, ordersFilter)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if countOrders == 0 </span><span class="cov8" title="1">{
+                return nil, nil
+        }</span>
+
+        <span class="cov8" title="1">pagination.SetTotalCount(int64(countOrders))
+
+        orders, err := o.repository.FindByUserID(
+                ctx,
+                ordersFilter,
+                pagination.GetPerPage(), pagination.GetOffset(),
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+
+const (
+        lockTypeCreateOrderWithdraw = 100
+)
+
+func (o *Order) BalanceWithdraw(ctx context.Context, userID int32, withdraw entities.BalanceWithdraw) *entities.DomainError <span class="cov8" title="1">{
+        withdraw.Order = strings.Trim(withdraw.Order, " ")
+
+        errDomain := o.validateOrderID(ctx, withdraw.Order, userID)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                if errDomain.ErrorType != entities.InternalServerErrorType </span><span class="cov0" title="0">{
+                        return entities.NewBadRequestError(nil, "неверный номер заказа")
+                }</span>
+
+                <span class="cov8" title="1">return errDomain</span>
+        }
+
+        <span class="cov8" title="1">tx, err := o.repository.BeginTransaction(ctx)
+        if err != nil </span><span class="cov8" title="1">{
+                o.logger.Error("ошибка начала транзакции", zap.Error(err))
+
+                return entities.NewInternalServerError(err, "")
+        }</span>
+        <span class="cov8" title="1">defer tx.Rollback()
+
+        ctx = dbPkg.WithTx(ctx, tx)
+
+        if errDomain = o.tryAdvisoryLock(ctx, tx, lockTypeCreateOrderWithdraw, int64(userID)); errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">userBalance, errDomain := o.repository.UserBalance(ctx, userID)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">errDomain = o.validateWithdraw(userID, userBalance, withdraw)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">errDomain = o.repository.CreateOrderWithWithdraw(ctx, userID, withdraw.Order, withdraw.Sum)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">err = tx.Commit()
+        if err != nil </span><span class="cov8" title="1">{
+                o.logger.Error("ошибка Commit", zap.Error(err))
+
+                return entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (o *Order) tryAdvisoryLock(
+        ctx context.Context,
+        tx interfaces.Tx,
+        lockType int64,
+        key int64,
+) *entities.DomainError <span class="cov8" title="1">{
+        ok, err := dbPkg.TryLock(
+                ctx,
+                tx,
+                lockType,
+                key,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                o.logger.Error(
+                        "ошибка выполнения запроса блокировки",
+                        zap.Error(err),
+                        zap.Int64("key", key),
+                        zap.Int64("lockType", lockType),
+                )
+
+                return entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">if !ok </span><span class="cov8" title="1">{
+                o.logger.Warn(
+                        "запрос отклонен: операция уже выполняется параллельно",
+                        zap.Int64("key", key),
+                        zap.Int64("lockType", lockType),
+                )
+
+                return entities.NewTooManyRequestError(
+                        nil,
+                        "операция уже выполняется, попробуйте позже",
+                )
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (o *Order) OrdersListUser(
+        ctx context.Context,
+        userID int32,
+        pagination *pagination.Pagination,
+) ([]entities.Order, *entities.DomainError) <span class="cov8" title="1">{
+        ordersFilter := entities.OrderFilter{UserID: userID, OrderType: new(entities.OrderFilterAddBalanceType)}
+
+        countOrders, err := o.repository.CountOrdersByUserID(ctx, ordersFilter)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if countOrders == 0 </span><span class="cov8" title="1">{
+                return nil, nil
+        }</span>
+
+        <span class="cov8" title="1">pagination.SetTotalCount(int64(countOrders))
+
+        orders, err := o.repository.FindByUserID(
+                ctx,
+                ordersFilter,
+                pagination.GetPerPage(), pagination.GetOffset(),
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+
+func (o *Order) CreateOrder(ctx context.Context, orderID string, userID int32) *entities.DomainError <span class="cov8" title="1">{
+        orderID = strings.Trim(orderID, " ")
+
+        errDomain := o.validateOrderID(ctx, orderID, userID)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">errDomain = o.repository.CreateOrder(ctx, orderID, userID, entities.OrdersStatusNew)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">o.orderQueue.AddOrderIDToQueue(orderID)
+
+        o.logger.Info("Заказ отправлен в очередь на обработку", zap.String("order_id", orderID))
+
+        return nil</span>
+}
+
+func (o *Order) validateOrderID(ctx context.Context, id string, userID int32) *entities.DomainError <span class="cov8" title="1">{
+        if !helpers.ValidateLuhn(id) </span><span class="cov8" title="1">{
+                return entities.NewUnprocessableEntity(nil, "неверный формат номера заказа")
+        }</span>
+
+        <span class="cov8" title="1">ord, err := o.repository.FindByOrderID(ctx, id)
+        if err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if ord != nil </span><span class="cov8" title="1">{
+                if ord.UserID == userID </span><span class="cov8" title="1">{
+                        return entities.NewOkError(nil, "номер заказа уже был загружен этим пользователем")
+                }</span>
+
+                <span class="cov8" title="1">return entities.NewConflictError(nil, "номер заказа уже был загружен другим пользователем")</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (o *Order) validateWithdraw(userID int32, userBalance float64, withdraw entities.BalanceWithdraw) *entities.DomainError <span class="cov8" title="1">{
+        if userBalance &lt;= 0 </span><span class="cov8" title="1">{
+                if userBalance &lt; 0 </span><span class="cov8" title="1">{
+                        o.logger.Error("У пользователя отрицательный баланс",
+                                zap.Int32("user_id", userID),
+                                zap.Float64("balance", userBalance),
+                        )
+                }</span>
+
+                <span class="cov8" title="1">return entities.NewPaymentRequiredError(nil, "на счету недостаточно средств")</span>
+        }
+
+        <span class="cov8" title="1">if withdraw.Sum &lt;= float64(0) </span><span class="cov8" title="1">{
+                return entities.NewBadRequestError(nil, "сумма для списания должна быть больше 0")
+        }</span>
+
+        <span class="cov8" title="1">if withdraw.Sum &gt; userBalance </span><span class="cov8" title="1">{
+                return entities.NewPaymentRequiredError(nil, "на счету недостаточно средств")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func NewOrder(
+        repository Repository,
+        orderQueue OrderQueue,
+        logger interfaces.Logger,
+) *Order <span class="cov0" title="0">{
+        return &amp;Order{
+                repository: repository,
+                logger:     logger,
+                orderQueue: orderQueue,
+        }
+}</span>
+</pre>
+		
+		<pre class="file" id="file37" style="display: none">package order
+
+import (
+        "context"
+        "sync"
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "go.uber.org/zap"
+)
+
+const workerCount = 3
+
+type BonusRepository interface {
+        GetOrder(ctx context.Context, orderID string) (*entities.Order, *entities.DomainError)
+}
+
+type OrderRepository interface {
+        UpdateStatusAndBonus(ctx context.Context, order entities.Order) *entities.DomainError
+        FindStaleOrders(ctx context.Context, statuses []entities.OrderStatus, limit int64) ([]string, *entities.DomainError)
+}
+
+type OrderProcessor struct {
+        logger             interfaces.Logger
+        ordersProcessingCh chan string
+        ordersProcessedCh  chan entities.Order
+        bonusRepository    BonusRepository
+        orderRepository    OrderRepository
+}
+
+func (op *OrderProcessor) AddOrderIDToQueue(orderID string) <span class="cov8" title="1">{
+        select </span>{
+        case op.ordersProcessingCh &lt;- orderID:<span class="cov8" title="1">
+                op.logger.Info("Заказ отправлен в очередь на обработку", zap.String("order_id", orderID))</span>
+        default:<span class="cov8" title="1">
+                op.logger.Warn("Очередь обработки переполнена, заказ обработается позже из БД", zap.String("order_id", orderID))</span>
+        }
+}
+
+func (op *OrderProcessor) AddOrderToQueue(order entities.Order) <span class="cov8" title="1">{
+        select </span>{
+        case op.ordersProcessedCh &lt;- order:<span class="cov8" title="1">
+                op.logger.Info("Заказ отправлен в очередь на обновление", zap.Any("order", order))</span>
+        default:<span class="cov8" title="1">
+                op.logger.Warn("Очередь обработки переполнена", zap.Any("order", order))</span>
+        }
+}
+
+func NewOrderProcessor(
+        bonusRepository BonusRepository,
+        orderRepository OrderRepository,
+        logger interfaces.Logger,
+) *OrderProcessor <span class="cov0" title="0">{
+        // канал для обработка заказов, у которых статус NEW, PROCESSING
+        ordersProcessingCh := make(chan string, workerCount*5)
+        // канал с результатом начисления по заказам
+        ordersProcessedCh := make(chan entities.Order, workerCount*5)
+
+        return &amp;OrderProcessor{
+                logger:             logger,
+                bonusRepository:    bonusRepository,
+                orderRepository:    orderRepository,
+                ordersProcessingCh: ordersProcessingCh,
+                ordersProcessedCh:  ordersProcessedCh,
+        }
+}</span>
+
+var orderStatusesCheck = []entities.OrderStatus{
+        entities.OrdersStatusNew,
+        entities.OrdersStatusProcessing,
+}
+
+const (
+        databasePollerInterval = 1 * time.Minute
+)
+
+func (op *OrderProcessor) StartDatabasePoller(ctx context.Context) <span class="cov0" title="0">{
+        tick := time.Tick(databasePollerInterval)
+
+        go func() </span><span class="cov0" title="0">{
+                for </span><span class="cov0" title="0">{
+                        select </span>{
+                        case &lt;-tick:<span class="cov0" title="0">
+                                orderIDs, err := op.orderRepository.FindStaleOrders(
+                                        ctx,
+                                        orderStatusesCheck,
+                                        10,
+                                )
+                                if err != nil </span><span class="cov0" title="0">{
+                                        op.logger.Error("ошибка получения order_ids StartDatabasePoller", zap.Error(err.SourceErr))
+                                        continue</span>
+                                }
+
+                                <span class="cov0" title="0">for _, orderID := range orderIDs </span><span class="cov0" title="0">{
+                                        op.AddOrderIDToQueue(orderID)
+                                }</span>
+                        case &lt;-ctx.Done():<span class="cov0" title="0">
+                                return</span>
+                        }
+                }
+        }()
+}
+
+func (op *OrderProcessor) Start(ctx context.Context) <span class="cov0" title="0">{
+        var wgProcessWorkers sync.WaitGroup
+        var wgSaveResults sync.WaitGroup
+
+        // воркеры, которые слушают заказы из ordersProcessingCh
+        for i := 0; i &lt; workerCount; i++ </span><span class="cov0" title="0">{
+                wgProcessWorkers.Add(1)
+                go func() </span><span class="cov0" title="0">{
+                        defer wgProcessWorkers.Done()
+                        op.orderCheckStatus(ctx)
+                }</span>()
+        }
+
+        // воркеры, которые обновляют заказы в БД, берут данные из ordersProcessedCh
+        <span class="cov0" title="0">for i := 0; i &lt; workerCount; i++ </span><span class="cov0" title="0">{
+                wgSaveResults.Add(1)
+                go func() </span><span class="cov0" title="0">{
+                        defer wgSaveResults.Done()
+                        op.orderUpdateBonus(ctx)
+                }</span>()
+        }
+
+        <span class="cov0" title="0">go func() </span><span class="cov0" title="0">{
+                &lt;-ctx.Done()
+                op.logger.Info("Получен сигнал отмены. Ожидаем завершения воркеров...")
+
+                close(op.ordersProcessingCh)
+                wgProcessWorkers.Wait()
+
+                close(op.ordersProcessedCh)
+                wgSaveResults.Wait()
+
+                op.logger.Info("Все фоновые воркеры успешно завершили работу")
+        }</span>()
+}
+
+func (op *OrderProcessor) orderCheckStatus(ctx context.Context) <span class="cov8" title="1">{
+        for orderID := range op.ordersProcessingCh </span><span class="cov8" title="1">{
+                op.checkOrderBonus(ctx, orderID)
+        }</span>
+}
+
+func (op *OrderProcessor) checkOrderBonus(ctx context.Context, orderID string) <span class="cov8" title="1">{
+        result, err := op.bonusRepository.GetOrder(ctx, orderID)
+        if err != nil </span><span class="cov8" title="1">{
+                if err.ErrorType == entities.NoContentErrorType </span><span class="cov8" title="1">{
+                        // заказу статус не присваиваем так как падают тесты на гитлабе
+                        op.logger.Info("Заказ не найден в bonus, заказу присвоен статус INVALID", zap.String("order_id", orderID))
+
+                        result = &amp;entities.Order{
+                                OrderID:     orderID,
+                                NextCheckAt: new(time.Now().Add(2 * time.Minute)),
+                        }
+                }</span> else<span class="cov8" title="1"> {
+                        return
+                }</span>
+        }
+
+        <span class="cov8" title="1">select </span>{
+        case op.ordersProcessedCh &lt;- *result:<span class="cov8" title="1">
+                op.logger.Info("Заказ отправлен в очередь на обновление данных",
+                        zap.String("order_id", orderID),
+                        zap.Any("order", result),
+                )</span>
+        case &lt;-ctx.Done():<span class="cov8" title="1">
+                return</span>
+        }
+}
+
+func (op *OrderProcessor) orderUpdateBonus(ctx context.Context) <span class="cov8" title="1">{
+        for orderData := range op.ordersProcessedCh </span><span class="cov8" title="1">{
+                // если ctx отменен, создаем новый контект чтобы запросы в БД успели выполниться
+                saveCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
+                op.updateStatusOrder(saveCtx, orderData)
+
+                cancel()
+        }</span>
+}
+
+func (op *OrderProcessor) updateStatusOrder(ctx context.Context, data entities.Order) <span class="cov8" title="1">{
+        if data.OrderID == "" </span><span class="cov8" title="1">{
+                op.logger.Info("updateStatusOrder пустой orderID", zap.Any("order", data))
+
+                return
+        }</span>
+
+        <span class="cov8" title="1">err := op.orderRepository.UpdateStatusAndBonus(ctx, data)
+        if err != nil </span><span class="cov8" title="1">{
+                if err.ErrorType == entities.RetriableErrorType </span><span class="cov8" title="1">{
+                        op.logger.Error(
+                                "Ошибка обновления заказа, заказ повторно отправлен в очередь",
+                                zap.Error(err),
+                                zap.Any("order", data),
+                        )
+
+                        op.AddOrderToQueue(data)
+                }</span>
+
+                <span class="cov8" title="1">return</span>
+        }
+
+        <span class="cov8" title="1">op.logger.Info("Заказ успешно обновлен", zap.Any("order", data))</span>
+}
+</pre>
+		
+		<pre class="file" id="file38" style="display: none">package user
+
+import (
+        "context"
+        "fmt"
+        "strings"
+        "time"
+
+        "github.com/bazueva/gofermart/internal/domain/entities"
+        "github.com/bazueva/gofermart/internal/interfaces"
+        "github.com/bazueva/gofermart/internal/models/forms"
+        "github.com/go-playground/validator/v10"
+        "github.com/golang-jwt/jwt/v4"
+        "github.com/samber/lo"
+        "github.com/spf13/cast"
+        "go.uber.org/zap"
+        "golang.org/x/crypto/bcrypt"
+)
+
+/*
+*
+Сервис для работы с пользователями:
+1) регистрация
+2) аутентификация
+*/
+
+type Repository interface {
+        ExistLogin(ctx context.Context, login string) (bool, *entities.DomainError)
+        CreateUser(ctx context.Context, user entities.User) (int32, *entities.DomainError)
+        FindByLogin(ctx context.Context, login string) (entities.User, *entities.DomainError)
+}
+
+type UserService struct {
+        repository    Repository
+        formValidator *validator.Validate
+        logger        interfaces.Logger
+        secretKey     string
+}
+
+func (u *UserService) CheckJWTToken(token string) (int32, *entities.DomainError) <span class="cov8" title="1">{
+        parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) </span><span class="cov8" title="1">{
+                return []byte(u.secretKey), nil
+        }</span>)
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
+                return 0, entities.NewUnauthorizedError(err, "токен недействителен")
+        }</span>
+
+        <span class="cov8" title="1">if !parsedToken.Valid </span><span class="cov0" title="0">{
+                return 0, entities.NewUnauthorizedError(nil, "токен недействителен")
+        }</span>
+
+        <span class="cov8" title="1">claims, ok := parsedToken.Claims.(jwt.MapClaims)
+        if !ok </span><span class="cov0" title="0">{
+                return 0, entities.NewUnauthorizedError(nil, "токен недействителен")
+        }</span>
+
+        <span class="cov8" title="1">userIDRaw, exists := claims["user_id"]
+        if !exists </span><span class="cov8" title="1">{
+                return 0, entities.NewUnauthorizedError(nil, "пользователь не авторизован")
+        }</span>
+
+        <span class="cov8" title="1">userID := cast.ToInt32(userIDRaw)
+        if userID == 0 </span><span class="cov8" title="1">{
+                return 0, entities.NewUnauthorizedError(nil, "пользователь не авторизован")
+        }</span>
+
+        <span class="cov8" title="1">return userID, nil</span>
+}
+
+func (u *UserService) Login(ctx context.Context, loginForm forms.LoginForm) (string, *entities.DomainError) <span class="cov8" title="1">{
+        errDomain := u.validateForm(loginForm)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return "", errDomain
+        }</span>
+
+        <span class="cov8" title="1">user, errDomain := u.repository.FindByLogin(ctx, loginForm.Login)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return "", errDomain
+        }</span>
+
+        <span class="cov8" title="1">if user.ID == 0 </span><span class="cov8" title="1">{
+                return "", entities.NewUnauthorizedError(nil, "неверная пара логин/пароль")
+        }</span>
+
+        <span class="cov8" title="1">err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(loginForm.Password))
+        if err != nil </span><span class="cov8" title="1">{
+                return "", entities.NewUnauthorizedError(nil, "неверная пара логин/пароль")
+        }</span>
+
+        <span class="cov8" title="1">token, err := u.generateJWTToken(user.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                u.logger.Error("error generateJWTToken", zap.Error(err))
+
+                return "", entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return token, nil</span>
+}
+
+func (u *UserService) Register(ctx context.Context, userForm forms.UserForm) (string, *entities.DomainError) <span class="cov8" title="1">{
+        errDomain := u.validateRegister(ctx, userForm)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return "", errDomain
+        }</span>
+
+        <span class="cov8" title="1">userID, errDomain := u.createUser(ctx, userForm)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return "", errDomain
+        }</span>
+
+        <span class="cov8" title="1">token, err := u.generateJWTToken(userID)
+        if err != nil </span><span class="cov0" title="0">{
+                u.logger.Error("error generateJWTToken", zap.Error(err))
+
+                return "", entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">return token, nil</span>
+}
+
+func (u *UserService) validateForm(form interface{}) *entities.DomainError <span class="cov8" title="1">{
+        err := u.formValidator.Struct(form)
+
+        validationErrors := entities.ConvertValidatorErrors(err)
+        if len(validationErrors) &gt; 0 </span><span class="cov8" title="1">{
+                errorsResult := lo.Map(validationErrors, func(item entities.ValidateError, index int) string </span><span class="cov8" title="1">{
+                        return fmt.Sprintf("%s: %s", item.Field, item.Error)
+                }</span>)
+
+                <span class="cov8" title="1">return entities.NewBadRequestError(nil, strings.Join(errorsResult, ","))</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (u *UserService) validateRegister(ctx context.Context, userForm forms.UserForm) *entities.DomainError <span class="cov8" title="1">{
+        errDomain := u.validateForm(userForm)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">exists, errDomain := u.checkUniqueLogin(ctx, userForm.Login)
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return errDomain
+        }</span>
+
+        <span class="cov8" title="1">if exists </span><span class="cov8" title="1">{
+                return entities.NewConflictError(nil, "Такой login уже существует")
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (u *UserService) checkUniqueLogin(ctx context.Context, login string) (bool, *entities.DomainError) <span class="cov8" title="1">{
+        exist, err := u.repository.ExistLogin(ctx, login)
+        if err != nil </span><span class="cov8" title="1">{
+                return false, err
+        }</span>
+
+        <span class="cov8" title="1">return exist, nil</span>
+}
+
+func (u *UserService) createUser(ctx context.Context, userForm forms.UserForm) (int32, *entities.DomainError) <span class="cov8" title="1">{
+        hashPass, err := hashPassword(userForm.Password)
+        if err != nil </span><span class="cov8" title="1">{
+                u.logger.Error("error hash password", zap.Error(err))
+
+                return 0, entities.NewInternalServerError(err, "")
+        }</span>
+
+        <span class="cov8" title="1">userID, errDomain := u.repository.CreateUser(ctx, entities.User{
+                Login:        userForm.Login,
+                PasswordHash: hashPass,
+        })
+        if errDomain != nil </span><span class="cov8" title="1">{
+                return 0, errDomain
+        }</span>
+
+        <span class="cov8" title="1">return userID, nil</span>
+}
+
+func (u *UserService) generateJWTToken(userID int32) (string, error) <span class="cov8" title="1">{
+        claims := jwt.MapClaims{
+                "user_id": userID,
+                "exp":     time.Now().Add(24 * time.Hour).Unix(),
+        }
+
+        token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+        tokenString, err := token.SignedString([]byte(u.secretKey))
+
+        return tokenString, err
+}</span>
+
+func NewUserService(repository Repository, logger interfaces.Logger, secretKey string) *UserService <span class="cov8" title="1">{
+        service := &amp;UserService{
+                logger:        logger,
+                repository:    repository,
+                formValidator: validator.New(validator.WithRequiredStructEnabled()),
+                secretKey:     secretKey,
+        }
+
+        return service
+}</span>
+
+func hashPassword(password string) (string, error) <span class="cov8" title="1">{
+        hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return string(hash), nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
