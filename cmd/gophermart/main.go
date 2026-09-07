@@ -97,11 +97,9 @@ func closeDatabase(db *sql.DB) {
 }
 
 func syncLogger(logger *zap.Logger) {
-	defer func() {
-		if err := logger.Sync(); err != nil {
-			log.Printf("failed to sync logger: %v", err)
-		}
-	}()
+	if err := logger.Sync(); err != nil {
+		log.Printf("failed to sync logger: %v", err)
+	}
 }
 
 func initLogger(cfg *config) {
