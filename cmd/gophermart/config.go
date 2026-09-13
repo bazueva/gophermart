@@ -6,7 +6,6 @@ import (
 
 	configpkg "github.com/bazueva/gofermart/cmd/config"
 	"github.com/caarlos0/env/v11"
-
 	"go.uber.org/zap"
 )
 
@@ -29,14 +28,14 @@ func readConfig() (config, error) {
 		SecretKey: "K7#mP2!xQ9@vL4$z",
 	}
 
-	err := parseFlags(&cfg)
-	if err != nil {
-		return config{}, err
-	}
-
-	err = env.Parse(&cfg)
+	err := env.Parse(&cfg)
 	if err != nil {
 		return cfg, err
+	}
+
+	err = parseFlags(&cfg)
+	if err != nil {
+		return config{}, err
 	}
 
 	return cfg, nil
@@ -45,9 +44,10 @@ func readConfig() (config, error) {
 func parseFlags(config *config) error {
 	serverFlags := flag.NewFlagSet("", flag.ContinueOnError)
 	serverFlags.Var(&config.ServerAddr, "a", "address http server")
-	serverFlags.StringVar(&config.DatabaseDSN, "d", "", "Database DSN")
-	serverFlags.StringVar(&config.SecretKey, "s", "", "Secret Key")
-	serverFlags.StringVar(&config.AccrualSystemAddress, "r", "", "accrual system address")
+
+	databaseDSN := serverFlags.String("d", config.DatabaseDSN, "Database DSN")
+	secretKey := serverFlags.String("s", config.SecretKey, "Secret Key")
+	accrualSystemAddress := serverFlags.String("r", config.AccrualSystemAddress, "accrual system address")
 
 	if len(os.Args) > 1 {
 		err := serverFlags.Parse(os.Args[1:])
@@ -55,6 +55,10 @@ func parseFlags(config *config) error {
 			return err
 		}
 	}
+
+	config.DatabaseDSN = *databaseDSN
+	config.SecretKey = *secretKey
+	config.AccrualSystemAddress = *accrualSystemAddress
 
 	return nil
 }
