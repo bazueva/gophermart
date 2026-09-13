@@ -225,7 +225,8 @@ func (op *OrderProcessor) updateStatusOrder(ctx context.Context, data entities.O
 
 	err := op.orderRepository.UpdateStatusAndBonus(ctx, data)
 	if err != nil {
-		if err.ErrorType == entities.RetriableErrorType {
+		switch err.ErrorType {
+		case entities.RetriableErrorType:
 			op.logger.Error(
 				"Ошибка обновления заказа, заказ повторно отправлен в очередь",
 				zap.Error(err),
@@ -233,6 +234,12 @@ func (op *OrderProcessor) updateStatusOrder(ctx context.Context, data entities.O
 			)
 
 			op.AddOrderToQueue(data)
+		default:
+			op.logger.Error(
+				"Ошибка обновления заказа",
+				zap.Error(err),
+				zap.Any("order", data),
+			)
 		}
 
 		return

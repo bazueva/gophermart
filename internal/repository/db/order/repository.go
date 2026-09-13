@@ -11,8 +11,8 @@ import (
 	"github.com/bazueva/gofermart/internal/repository/db/order/queries"
 	"github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
 	"github.com/go-jet/jet/v2/qrm"
+	errorsPkg "github.com/pkg/errors"
 	"github.com/samber/lo"
-	"go.uber.org/zap"
 )
 
 const (
@@ -40,9 +40,7 @@ func (r *repository) UserBalanceWithWithdrawn(ctx context.Context, userID int32)
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 
 	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
-		r.logger.Error("error repository UserBalance", zap.Error(err))
-
-		return entities.Balance{}, entities.NewInternalServerError(err, "")
+		return entities.Balance{}, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository UserBalance"), "")
 	}
 
 	return entities.Balance{
@@ -64,9 +62,7 @@ func (r *repository) CreateOrderWithWithdraw(ctx context.Context, userID int32, 
 	).
 		ExecContext(ctxWithTimeout, r.executor(ctxWithTimeout))
 	if err != nil {
-		r.logger.Error("error repository CreateOrderWithWithdraw", zap.Error(err))
-
-		return entities.NewInternalServerError(err, "")
+		return entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository CreateOrderWithWithdraw"), "")
 	}
 
 	return nil
@@ -94,9 +90,7 @@ func (r *repository) UserBalance(ctx context.Context, userID int32) (float64, *e
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 
 	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
-		r.logger.Error("error repository UserBalance", zap.Error(err))
-
-		return 0, entities.NewInternalServerError(err, "")
+		return 0, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository UserBalance"), "")
 	}
 
 	return result.Sum, nil
@@ -112,9 +106,7 @@ func (r *repository) FindStaleOrders(ctx context.Context, statuses []entities.Or
 	err := queries.NewFindStaleOrders(statuses, limit).
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
-		r.logger.Error("error repository FindStaleOrders", zap.Error(err))
-
-		return nil, entities.NewInternalServerError(err, "")
+		return nil, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository FindStaleOrders"), "")
 	}
 
 	return lo.Map(result, func(item model.Orders, index int) string {
@@ -134,12 +126,11 @@ func (r *repository) UpdateStatusAndBonus(
 		NewUpdateStatusAndBonus(order.OrderID, order.Status, order.BonusSum, order.NextCheckAt).
 		ExecContext(ctxWithTimeout, r.executor(ctxWithTimeout))
 	if err != nil {
-		r.logger.Error("error repository UpdateStatusAndBonus", zap.Error(err))
 		if r.errorClassifier.ClassifyRetry(err) == dbPkg.Retriable {
 			return entities.NewRetriableError(err, "")
 		}
 
-		return entities.NewInternalServerError(err, "")
+		return entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository UpdateStatusAndBonus"), "")
 	}
 
 	return nil
@@ -157,9 +148,7 @@ func (r *repository) CountOrdersByUserID(ctx context.Context, filter entities.Or
 	err := queries.NewCountByUserID(filter).
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 	if err != nil {
-		r.logger.Error("error repository FindByOrderID", zap.Error(err))
-
-		return 0, entities.NewInternalServerError(err, "")
+		return 0, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository CountOrdersByUserID"), "")
 	}
 
 	return result.Count, nil
@@ -180,9 +169,7 @@ func (r *repository) FindByUserID(
 	err := queries.NewFindByUserID(filter, limit, offset).
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
-		r.logger.Error("error repository FindByOrderID", zap.Error(err))
-
-		return nil, entities.NewInternalServerError(err, "")
+		return nil, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository FindByUserID"), "")
 	}
 
 	return lo.Map(result, func(item model.Orders, index int) entities.Order {
@@ -215,9 +202,7 @@ func (r *repository) CreateOrder(ctx context.Context, orderID string, userID int
 	err := queries.NewCreateOrder(orderID, userID, status).
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 	if err != nil {
-		r.logger.Error("error repository CreateOrder", zap.Error(err))
-
-		return entities.NewInternalServerError(err, "")
+		return entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository CreateOrder"), "")
 	}
 
 	return nil
@@ -233,9 +218,7 @@ func (r *repository) FindByOrderID(ctx context.Context, orderID string) (*entiti
 	err := queries.NewFindByOrderID(orderID).
 		QueryContext(ctxWithTimeout, r.executor(ctxWithTimeout), &result)
 	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
-		r.logger.Error("error repository FindByOrderID", zap.Error(err))
-
-		return nil, entities.NewInternalServerError(err, "")
+		return nil, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository FindByOrderID"), "")
 	}
 
 	if result.ID == 0 {
@@ -257,10 +240,9 @@ func (r *repository) BeginTransaction(ctx context.Context) (interfaces.Tx, error
 }
 
 // NewRepository создание репозитория для работы с заказами.
-func NewRepository(db interfaces.DB, logger interfaces.Logger) *repository {
+func NewRepository(db interfaces.DB) *repository {
 	return &repository{
 		db:              db,
-		logger:          logger,
 		errorClassifier: dbPkg.NewPostgresErrorClassifier(),
 	}
 }

@@ -9,16 +9,14 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/helpers"
-	"github.com/bazueva/gofermart/internal/interfaces/mocks"
 	dbPkg "github.com/bazueva/gofermart/internal/repository/db"
 	"github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
 	"github.com/go-jet/jet/v2/qrm"
 	"github.com/stretchr/testify/assert"
-	mock2 "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
-func newTestRepository(t *testing.T) (*repository, sqlmock.Sqlmock, *mocks.MockLogger) {
+func newTestRepository(t *testing.T) (*repository, sqlmock.Sqlmock) {
 	t.Helper()
 
 	db, mock, err := helpers.SQLMockTest(t)
@@ -28,14 +26,11 @@ func newTestRepository(t *testing.T) (*repository, sqlmock.Sqlmock, *mocks.MockL
 		_ = db.Close()
 	})
 
-	logger := mocks.NewMockLogger(t)
-
 	repo := NewRepository(
 		dbPkg.NewSQLDBWrapper(db),
-		logger,
 	)
 
-	return repo, mock, logger
+	return repo, mock
 }
 
 func TestRepository_CreateOrder(t *testing.T) {
@@ -44,7 +39,7 @@ func TestRepository_CreateOrder(t *testing.T) {
 	t.Run("success - create order", func(t *testing.T) {
 		t.Parallel()
 
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		ctx := t.Context()
 
@@ -66,11 +61,10 @@ func TestRepository_CreateOrder(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
 
-		logger.EXPECT().Error("error repository CreateOrder", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -94,9 +88,7 @@ func TestRepository_CreateOrder(t *testing.T) {
 	})
 
 	t.Run("context timeout", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-
-		logger.EXPECT().Error("error repository CreateOrder", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -125,7 +117,7 @@ func TestRepository_FindByOrderID(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - find order", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		orderID := "order-123"
@@ -155,7 +147,7 @@ func TestRepository_FindByOrderID(t *testing.T) {
 	})
 
 	t.Run("order not found", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		orderID := "order-not-found"
@@ -178,11 +170,9 @@ func TestRepository_FindByOrderID(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().Error("error repository FindByOrderID", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -208,9 +198,7 @@ func TestRepository_FindByOrderID(t *testing.T) {
 	})
 
 	t.Run("context timeout", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-
-		logger.EXPECT().Error("error repository FindByOrderID", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -241,7 +229,7 @@ func TestRepository_CountOrdersByUserID(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - find orders", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		filter := entities.OrderFilter{
@@ -266,11 +254,8 @@ func TestRepository_CountOrdersByUserID(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().
-			Error("error repository FindByOrderID", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -293,8 +278,7 @@ func TestRepository_CountOrdersByUserID(t *testing.T) {
 	})
 
 	t.Run("context timeout", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-		logger.EXPECT().Error("error repository FindByOrderID", mock2.Anything)
+		repo, mock  := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -323,7 +307,7 @@ func TestRepository_FindByUserID(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - find orders by user ID", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		filter := entities.OrderFilter{
@@ -376,7 +360,7 @@ func TestRepository_FindByUserID(t *testing.T) {
 	})
 
 	t.Run("success - no orders found", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		filter := entities.OrderFilter{
@@ -409,12 +393,9 @@ func TestRepository_FindByUserID(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().
-			Error("error repository FindByOrderID", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -450,8 +431,7 @@ func TestRepository_FindByUserID(t *testing.T) {
 	})
 
 	t.Run("context timeout", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-		logger.EXPECT().Error("error repository FindByOrderID", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -490,7 +470,7 @@ func TestRepository_FindStaleOrders(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - find stale orders", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		statuses := []entities.OrderStatus{
@@ -524,7 +504,7 @@ func TestRepository_FindStaleOrders(t *testing.T) {
 	})
 
 	t.Run("success - no stale orders found", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		statuses := []entities.OrderStatus{
@@ -551,12 +531,9 @@ func TestRepository_FindStaleOrders(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().
-			Error("error repository FindStaleOrders", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -586,8 +563,7 @@ func TestRepository_FindStaleOrders(t *testing.T) {
 	})
 
 	t.Run("context timeout", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-		logger.EXPECT().Error("error repository FindStaleOrders", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -620,7 +596,7 @@ func TestRepository_UpdateStatusAndBonus(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - update status and bonus", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		order := entities.Order{
@@ -643,7 +619,7 @@ func TestRepository_UpdateStatusAndBonus(t *testing.T) {
 	})
 
 	t.Run("success - update status invalid and bonus", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 		ctx := t.Context()
 
 		order := entities.Order{
@@ -666,12 +642,9 @@ func TestRepository_UpdateStatusAndBonus(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().
-			Error("error repository UpdateStatusAndBonus", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -697,8 +670,7 @@ func TestRepository_UpdateStatusAndBonus(t *testing.T) {
 	})
 
 	t.Run("context timeout", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-		logger.EXPECT().Error("error repository UpdateStatusAndBonus", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -729,7 +701,7 @@ func TestRepository_UserBalanceWithWithdrawn(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - get balance with withdrawn", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		ctx := t.Context()
 
@@ -761,7 +733,7 @@ func TestRepository_UserBalanceWithWithdrawn(t *testing.T) {
 	})
 
 	t.Run("success - no rows", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		ctx := t.Context()
 
@@ -790,9 +762,7 @@ func TestRepository_UserBalanceWithWithdrawn(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-		logger.EXPECT().
-			Error("error repository UserBalance", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx := t.Context()
 
@@ -819,9 +789,7 @@ func TestRepository_UserBalanceWithWithdrawn(t *testing.T) {
 	})
 
 	t.Run("error - context canceled", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
-		logger.EXPECT().
-			Error("error repository UserBalance", mock2.Anything)
+		repo, mock := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -849,7 +817,7 @@ func TestRepository_UserBalanceWithWithdrawn(t *testing.T) {
 
 func TestRepository_CreateOrderWithWithdraw(t *testing.T) {
 	t.Run("success - create order with withdraw", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		ctx := t.Context()
 
@@ -882,12 +850,9 @@ func TestRepository_CreateOrderWithWithdraw(t *testing.T) {
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().
-			Error("error repository CreateOrderWithWithdraw", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -927,10 +892,7 @@ RETURNING orders.id AS "id";`
 	})
 
 	t.Run("error - context canceled", func(t *testing.T) {
-		repo, _, logger := newTestRepository(t)
-
-		logger.EXPECT().
-			Error("error repository CreateOrderWithWithdraw", mock2.Anything)
+		repo, _ := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -958,7 +920,7 @@ RETURNING orders.id AS "id";`
 
 func TestRepository_UserBalance(t *testing.T) {
 	t.Run("success - get user balance", func(t *testing.T) {
-		repo, mock, _ := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		ctx := t.Context()
 
@@ -988,12 +950,9 @@ WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED');`
 	})
 
 	t.Run("error - database error", func(t *testing.T) {
-		repo, mock, logger := newTestRepository(t)
+		repo, mock := newTestRepository(t)
 
 		errorDB := errors.New("database connection failed")
-
-		logger.EXPECT().
-			Error("error repository UserBalance", mock2.Anything)
 
 		ctx := t.Context()
 
@@ -1025,10 +984,7 @@ WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED');`
 	})
 
 	t.Run("error - context canceled", func(t *testing.T) {
-		repo, _, logger := newTestRepository(t)
-
-		logger.EXPECT().
-			Error("error repository UserBalance", mock2.Anything)
+		repo, _ := newTestRepository(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()

@@ -157,6 +157,7 @@ func (h *Handler) errorHandler(writer http.ResponseWriter, err error, statusCode
 			statusCode = http.StatusPaymentRequired
 
 		default:
+			h.logger.Error("error handler", zap.Error(domainError.SourceErr))
 			statusCode = http.StatusInternalServerError
 		}
 	}

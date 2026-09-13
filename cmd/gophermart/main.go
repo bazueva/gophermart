@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os/signal"
@@ -36,11 +35,11 @@ func main() {
 	defer syncLogger(cfg.logger)
 
 	db := initDatabase(cfg)
-	defer closeDatabase(db)
+	defer closeDatabase(db, cfg.logger)
 
 	if cfg.DatabaseDSN != "" {
 		if err := dbpkg.RunMigrations(db); err != nil {
-			log.Fatal("Migration failed:", err)
+			cfg.logger.Fatal("Migration failed:", zap.Error(err))
 		}
 	}
 
@@ -75,15 +74,15 @@ func main() {
 func initDatabase(cfg config) *sql.DB {
 	db, err := sql.Open("pgx", cfg.DatabaseDSN)
 	if err != nil {
-		panic(err)
+		cfg.logger.Fatal("Ошибка инициализации базы данных", zap.Error(err))
 	}
 
 	return db
 }
 
-func closeDatabase(db *sql.DB) {
+func closeDatabase(db *sql.DB, logger *zap.Logger) {
 	if err := db.Close(); err != nil {
-		log.Printf("failed to close database: %v", err)
+		logger.Error("Ошибка закрытия базы данных", zap.Error(err))
 	}
 }
 
@@ -98,14 +97,14 @@ func initLogger(cfg *config) {
 
 	cfg.logger, err = zap.NewProduction(zap.AddStacktrace(zap.ErrorLevel))
 	if err != nil {
-		panic(err)
+		log.Fatal("init logger", err)
 	}
 }
 
 func initConfig() config {
 	cfg, err := readConfig()
 	if err != nil {
-		panic(err)
+		log.Fatal("init config", err)
 	}
 
 	if cfg.SecretKey == "" {
@@ -223,10 +222,11 @@ func initComponents(cfg config, db interfaces.DB) *AppComponents {
 		cfg.logger,
 	)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to init bonus repository: %v", err))
+		cfg.logger.Fatal("Ошибка инициализации репозитория бонусов", zap.Error(err))
 	}
+
 	userRepo := user.NewRepository(db, cfg.logger)
-	orderRepo := order.NewRepository(db, cfg.logger)
+	orderRepo := order.NewRepository(db)
 
 	// Воркеры
 	orderProcessor := orderService.NewOrderProcessor(bonusRepo, orderRepo, cfg.logger)

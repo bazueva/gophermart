@@ -360,6 +360,8 @@ func TestOrderProcessor_updateStatusOrder(t *testing.T) {
 			).
 			Return(domainErr)
 
+		mockLogger.EXPECT().Error("Ошибка обновления заказа", mock.Anything)
+
 		op := &OrderProcessor{
 			logger:          mockLogger,
 			orderRepository: mockOrderRepository,

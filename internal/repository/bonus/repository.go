@@ -119,7 +119,21 @@ func createClient(logger interfaces.Logger) *resty.Client {
 		SetRetryAfter(func(client *resty.Client, response *resty.Response) (time.Duration, error) {
 			if response != nil && response.StatusCode() == http.StatusTooManyRequests {
 				if retryAfterHeader := response.Header().Get("Retry-After"); retryAfterHeader != "" {
-					if seconds, err := strconv.Atoi(retryAfterHeader); err == nil && seconds > 0 {
+					seconds, err := strconv.Atoi(retryAfterHeader)
+					if err != nil {
+						logger.Warn(
+							"невозможно преобразовать значение Retry-After в целое число",
+							zap.String("retry_after_header", retryAfterHeader),
+							zap.Error(err),
+						)
+					} else if seconds <= 0 {
+						logger.Warn(
+							"значение Retry-After не является положительным числом",
+							zap.String("retry_after_header", retryAfterHeader),
+						)
+					}
+
+					if seconds > 0 {
 						logger.Warn("Сервер ответил 429. Ждем согласно Retry-After",
 							zap.Int("seconds", seconds),
 							zap.String("url", response.Request.URL),
@@ -139,7 +153,7 @@ func createClient(logger interfaces.Logger) *resty.Client {
 				return true
 			}
 
-			return r.StatusCode() == http.StatusTooManyRequests
+			return r.StatusCode() == http.StatusTooManyRequests || r.StatusCode() >= 500
 		}).
 		SetRetryWaitTime(1 * time.Second).
 		SetRetryMaxWaitTime(5 * time.Second).

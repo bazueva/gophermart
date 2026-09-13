@@ -14,6 +14,7 @@ import (
 	interfacesMocks "github.com/bazueva/gofermart/internal/interfaces/mocks"
 	"github.com/bazueva/gofermart/internal/models"
 	"github.com/stretchr/testify/assert"
+	mock2 "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -416,6 +417,8 @@ func TestHandler_UserOrdersList(t *testing.T) {
 			UserOrdersList(req.Context(), int32(1), int32(20)).
 			Return(nil, domainErr)
 
+		logger.EXPECT().Error("error handler", mock2.Anything)
+
 		h := &Handler{
 			app:    mockApp,
 			logger: logger,
@@ -677,6 +680,8 @@ func TestHandler_UserWithdrawals(t *testing.T) {
 			UserWithdrawals(req.Context(), int32(1), int32(10)).
 			Return(nil, domainErr)
 
+		logger.EXPECT().Error("error handler", mock2.Anything)
+
 		h := &Handler{
 			app:    mockApp,
 			logger: logger,
@@ -826,6 +831,8 @@ func TestHandler_UserBalance(t *testing.T) {
 		mockApp.EXPECT().
 			UserBalance(req.Context()).
 			Return(entities.Balance{}, domainErr)
+
+		logger.EXPECT().Error("error handler", mock2.Anything)
 
 		h := &Handler{
 			app:    mockApp,
