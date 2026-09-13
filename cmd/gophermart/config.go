@@ -25,6 +25,7 @@ func readConfig() (config, error) {
 			Host: "localhost",
 			Port: 8080,
 		},
+		// падают тесты, поэтому добавлено дефолтное значение
 		SecretKey: "K7#mP2!xQ9@vL4$z",
 	}
 
