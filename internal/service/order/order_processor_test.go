@@ -143,6 +143,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 
 		mockBonusRepository := mocks.NewMockBonusRepository(t)
 		mockLogger := interfacesMocks.NewMockLogger(t)
+		waiter := mocks.NewMockWaiting(t)
 
 		order := &entities.Order{
 			OrderID:  "123456789",
@@ -162,12 +163,16 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 			).
 			Once()
 
+		waiter.EXPECT().Wait(mock.Anything).Return(nil)
+
+
 		processedCh := make(chan entities.Order, 1)
 
 		op := &OrderProcessor{
 			logger:            mockLogger,
 			bonusRepository:   mockBonusRepository,
 			ordersProcessedCh: processedCh,
+			workerPause:		waiter,
 		}
 
 		op.checkOrderBonus(t.Context(), "123456789")
@@ -180,6 +185,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 
 		mockBonusRepository := mocks.NewMockBonusRepository(t)
 		mockLogger := interfacesMocks.NewMockLogger(t)
+		waiter := mocks.NewMockWaiting(t)
 
 		domainErr := entities.NewNoContentError(nil, "")
 
@@ -199,6 +205,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 				mock.Anything,
 			).
 			Once()
+		waiter.EXPECT().Wait(mock.Anything).Return(nil)
 
 		processedCh := make(chan entities.Order, 1)
 
@@ -206,6 +213,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 			logger:            mockLogger,
 			bonusRepository:   mockBonusRepository,
 			ordersProcessedCh: processedCh,
+			workerPause: waiter,
 		}
 
 		op.checkOrderBonus(t.Context(), "123456789")
@@ -221,6 +229,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 
 		mockBonusRepository := mocks.NewMockBonusRepository(t)
 		mockLogger := interfacesMocks.NewMockLogger(t)
+		waiter := mocks.NewMockWaiting(t)
 
 		domainErr := entities.NewInternalServerError(
 			errors.New("bonus service error"),
@@ -230,6 +239,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 		mockBonusRepository.EXPECT().
 			GetOrder(mock.Anything, "123456789").
 			Return(nil, domainErr)
+		waiter.EXPECT().Wait(mock.Anything).Return(nil)
 
 		processedCh := make(chan entities.Order, 1)
 
@@ -237,6 +247,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 			logger:            mockLogger,
 			bonusRepository:   mockBonusRepository,
 			ordersProcessedCh: processedCh,
+			workerPause: waiter,
 		}
 
 		op.checkOrderBonus(t.Context(), "123456789")
@@ -248,6 +259,7 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 		t.Parallel()
 
 		mockBonusRepository := mocks.NewMockBonusRepository(t)
+		waiter := mocks.NewMockWaiting(t)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -259,12 +271,14 @@ func TestOrderProcessor_checkOrderBonus(t *testing.T) {
 		mockBonusRepository.EXPECT().
 			GetOrder(mock.Anything, "123456789").
 			Return(order, nil)
+		waiter.EXPECT().Wait(mock.Anything).Return(nil)
 
 		processedCh := make(chan entities.Order)
 
 		op := &OrderProcessor{
 			bonusRepository:   mockBonusRepository,
 			ordersProcessedCh: processedCh,
+			workerPause: waiter,
 		}
 
 		op.checkOrderBonus(ctx, "123456789")
@@ -431,6 +445,7 @@ func TestOrderProcessor_orderCheckStatus(t *testing.T) {
 
 		mockBonusRepository := mocks.NewMockBonusRepository(t)
 		mockLogger := interfacesMocks.NewMockLogger(t)
+		waiter := mocks.NewMockWaiting(t)
 
 		order := &entities.Order{
 			OrderID: "123456789",
@@ -448,6 +463,8 @@ func TestOrderProcessor_orderCheckStatus(t *testing.T) {
 			).
 			Once()
 
+		waiter.EXPECT().Wait(mock.Anything).Return(nil)
+
 		processingCh := make(chan string, 1)
 		processedCh := make(chan entities.Order, 1)
 
@@ -459,6 +476,7 @@ func TestOrderProcessor_orderCheckStatus(t *testing.T) {
 			bonusRepository:    mockBonusRepository,
 			ordersProcessingCh: processingCh,
 			ordersProcessedCh:  processedCh,
+			workerPause:		waiter,
 		}
 
 		op.orderCheckStatus(t.Context())

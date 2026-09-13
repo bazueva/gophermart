@@ -18,9 +18,10 @@ import (
 
 // Repository структура для работы с сервисом бонусов.
 type repository struct {
-	client *resty.Client
-	addr   string
-	logger interfaces.Logger
+	client     *resty.Client
+	addr       string
+	logger     interfaces.Logger
+	waitSetter WaitSetter
 }
 
 // Order структура для хранения информации о заказе.
@@ -28,6 +29,10 @@ type order struct {
 	Order   string  `json:"order"`
 	Status  string  `json:"status"`
 	Accrual float64 `json:"accrual"`
+}
+
+type WaitSetter interface {
+	Set(duration time.Duration)
 }
 
 // GetOrder получает информацию о заказе из сервиса бонусов.
@@ -97,20 +102,21 @@ func (r *repository) checkResponseStatus(code int, orderID string) *entities.Dom
 }
 
 // NewRepository создает новый экземпляр репозитория бонусов.
-func NewRepository(addr string, logger interfaces.Logger) (*repository, error) {
+func NewRepository(addr string, waiter WaitSetter, logger interfaces.Logger) (*repository, error) {
 	if addr == "" {
 		return nil, fmt.Errorf("не указан адрес сервера")
 	}
 
 	return &repository{
-		client: createClient(logger),
-		logger: logger,
-		addr:   addr,
+		client:     createClient(logger, waiter),
+		logger:     logger,
+		addr:       addr,
+		waitSetter: waiter,
 	}, nil
 }
 
 // createClient создает новый экземпляр клиента для работы с сервисом бонусов.
-func createClient(logger interfaces.Logger) *resty.Client {
+func createClient(logger interfaces.Logger, waiter WaitSetter) *resty.Client {
 	return resty.New().
 		SetRetryCount(3).
 		SetRetryAfter(func(client *resty.Client, response *resty.Response) (time.Duration, error) {
@@ -136,7 +142,10 @@ func createClient(logger interfaces.Logger) *resty.Client {
 							zap.String("url", response.Request.URL),
 						)
 
-						return time.Duration(seconds) * time.Second, nil
+						duration := time.Duration(seconds) * time.Second
+						waiter.Set(duration)
+
+						return duration, nil
 					}
 				}
 			}

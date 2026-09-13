@@ -23,12 +23,18 @@ type OrderRepository interface {
 	FindStaleOrders(ctx context.Context, statuses []entities.OrderStatus, limit int64) ([]string, *entities.DomainError)
 }
 
+type Waiting interface {
+	Wait(ctx context.Context) error
+}
+
 type OrderProcessor struct {
 	logger             interfaces.Logger
 	ordersProcessingCh chan string
 	ordersProcessedCh  chan entities.Order
 	bonusRepository    BonusRepository
 	orderRepository    OrderRepository
+
+	workerPause Waiting
 }
 
 // AddOrderIDToQueue добавляет идентификатор заказа в очередь на обработку.
@@ -58,6 +64,7 @@ func (op *OrderProcessor) AddOrderToQueue(order entities.Order) {
 func NewOrderProcessor(
 	bonusRepository BonusRepository,
 	orderRepository OrderRepository,
+	waiter Waiting,
 	logger interfaces.Logger,
 ) *OrderProcessor {
 	// канал для обработки заказов, у которых статус NEW, PROCESSING
@@ -71,6 +78,7 @@ func NewOrderProcessor(
 		orderRepository:    orderRepository,
 		ordersProcessingCh: ordersProcessingCh,
 		ordersProcessedCh:  ordersProcessedCh,
+		workerPause:        waiter,
 	}
 }
 
@@ -175,6 +183,10 @@ func (op *OrderProcessor) orderCheckStatus(ctx context.Context) {
 // Если заказ не найден, он добавляется в очередь с отложенной повторной
 // проверкой через 2 минуты.
 func (op *OrderProcessor) checkOrderBonus(ctx context.Context, orderID string) {
+	if err := op.workerPause.Wait(ctx); err != nil {
+		return
+	}
+
 	result, err := op.bonusRepository.GetOrder(ctx, orderID)
 	if err != nil {
 		if err.ErrorType == entities.NoContentErrorType {

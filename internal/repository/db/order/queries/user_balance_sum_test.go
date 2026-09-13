@@ -16,9 +16,13 @@ func TestNewUserBalanceSum(t *testing.T) {
 		stmt := NewUserBalanceSum(userID)
 		sql, args := stmt.Sql()
 
-		expectedSQL := `SELECT COALESCE(SUM(orders.bonus_sum), $1) AS "sum" 
-FROM public.orders 
-WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED');`
+		expectedSQL := `SELECT COALESCE(SUM(locked_orders."orders.bonus_sum"),$1) AS "sum" 
+FROM (
+	SELECT orders.bonus_sum AS "orders.bonus_sum" 
+	FROM public.orders 
+	WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED') 
+		FOR UPDATE
+	) AS locked_orders;`
 		expectedArgs := []interface{}{float64(0), userID}
 
 		assert.Equal(t, helpers.NormalizeSQL(expectedSQL), helpers.NormalizeSQL(sql))

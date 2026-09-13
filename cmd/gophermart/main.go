@@ -20,6 +20,7 @@ import (
 	dbPkg "github.com/bazueva/gofermart/internal/repository/db"
 	"github.com/bazueva/gofermart/internal/repository/db/order"
 	"github.com/bazueva/gofermart/internal/repository/db/user"
+	"github.com/bazueva/gofermart/internal/service"
 	orderService "github.com/bazueva/gofermart/internal/service/order"
 	userService "github.com/bazueva/gofermart/internal/service/user"
 	"github.com/go-chi/chi/v5"
@@ -216,9 +217,12 @@ type AppComponents struct {
 
 // initComponents инициализирует все компоненты приложения
 func initComponents(cfg config, db interfaces.DB) *AppComponents {
+	waiting := service.NewWaiter()
+
 	// Репозитории
 	bonusRepo, err := bonus.NewRepository(
 		cfg.AccrualSystemAddress,
+		waiting,
 		cfg.logger,
 	)
 	if err != nil {
@@ -229,7 +233,7 @@ func initComponents(cfg config, db interfaces.DB) *AppComponents {
 	orderRepo := order.NewRepository(db)
 
 	// Воркеры
-	orderProcessor := orderService.NewOrderProcessor(bonusRepo, orderRepo, cfg.logger)
+	orderProcessor := orderService.NewOrderProcessor(bonusRepo, orderRepo, waiting, cfg.logger)
 
 	// Сервисы
 	userService := userService.NewUserService(userRepo, cfg.logger, cfg.SecretKey)

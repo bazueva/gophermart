@@ -926,9 +926,13 @@ func TestRepository_UserBalance(t *testing.T) {
 
 		userID := int32(123)
 
-		expectedSQL := `SELECT COALESCE(SUM(orders.bonus_sum), $1) AS "sum"
-FROM public.orders
-WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED');`
+		expectedSQL := `SELECT COALESCE(SUM(locked_orders."orders.bonus_sum"), $1) AS "sum"
+        FROM (
+                  SELECT orders.bonus_sum AS "orders.bonus_sum"
+                  FROM public.orders
+                  WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED')
+                  FOR UPDATE
+             ) AS locked_orders;`
 
 		mock.ExpectQuery(expectedSQL).
 			WithArgs(
@@ -958,9 +962,13 @@ WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED');`
 
 		userID := int32(123)
 
-		expectedSQL := `SELECT COALESCE(SUM(orders.bonus_sum), $1) AS "sum"
-FROM public.orders
-WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED');`
+		expectedSQL := `SELECT COALESCE(SUM(locked_orders."orders.bonus_sum"), $1) AS "sum"
+        FROM (
+                  SELECT orders.bonus_sum AS "orders.bonus_sum"
+                  FROM public.orders
+                  WHERE (orders.user_id = $2::integer) AND (orders.status = 'PROCESSED')
+                  FOR UPDATE
+             ) AS locked_orders;`
 
 		mock.ExpectQuery(expectedSQL).
 			WithArgs(

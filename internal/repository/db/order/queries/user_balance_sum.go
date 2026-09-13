@@ -8,14 +8,25 @@ import (
 
 // NewUserBalanceSum создание запроса для получения суммы бонусов пользователя.
 func NewUserBalanceSum(userID int32) postgres.SelectStatement {
-	return postgres.SELECT(
-		postgres.COALESCE(
-			postgres.SUM(table.Orders.BonusSum),
-			postgres.Float(0),
-		).AS("sum"),
-	).FROM(table.Orders).
+	lockedOrders := postgres.
+		SELECT(
+			table.Orders.BonusSum,
+		).
+		FROM(table.Orders).
 		WHERE(
 			table.Orders.UserID.EQ(postgres.Int32(userID)).
 				AND(table.Orders.Status.EQ(enum.OrdersStatus.Processed)),
-		)
+		).
+		FOR(postgres.UPDATE()).
+		AsTable("locked_orders")
+
+	bonusSum := table.Orders.BonusSum.From(lockedOrders)
+
+	return postgres.SELECT(
+		postgres.COALESCE(
+			postgres.SUM(bonusSum),
+			postgres.Float(0),
+		).AS("sum"),
+	).
+		FROM(lockedOrders)
 }
