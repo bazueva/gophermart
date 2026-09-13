@@ -117,6 +117,10 @@ func initConfig() config {
 		panic(err)
 	}
 
+	if cfg.SecretKey == "" {
+		log.Fatal("missing secret key")
+	}
+
 	return cfg
 }
 
