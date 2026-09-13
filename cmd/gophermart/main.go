@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -27,6 +26,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
 )
 
 func main() {
@@ -44,41 +44,32 @@ func main() {
 		}
 	}
 
-	ctxWithCancel, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx, stop := signal.NotifyContext(
+		context.Background(),
+		syscall.SIGINT,
+		syscall.SIGTERM,
+	)
+	defer stop()
 
-	setupSignalHandler(ctxWithCancel, cancel, cfg.logger)
+	g, ctx := errgroup.WithContext(ctx)
 
 	// Запускаем pprof сервер с graceful shutdown
-	go runPprofServer(ctxWithCancel, cfg.logger)
+	runPprofServer(ctx, cfg.logger, g)
 
 	wrappedDB := dbPkg.NewSQLDBWrapper(db)
 	components := initComponents(cfg, wrappedDB)
 
 	// Запускаем фоновые процессоры
-	components.OrderProcessor.Start(ctxWithCancel)
-	components.OrderProcessor.StartDatabasePoller(ctxWithCancel)
+	components.OrderProcessor.Start(ctx, g)
+	components.OrderProcessor.StartDatabasePoller(ctx, g)
 
-	startServer(ctxWithCancel, cfg, components)
+	startServer(ctx, cfg, components, g)
 
-	// ждем 6 секунд, чтобы дать воркерам orderProcessor (у которых таймаут 5с)
-	// гарантированно завершить Graceful Shutdown перед тем, как проверять утечки памяти.
-	time.Sleep(6 * time.Second)
+	if err := g.Wait(); err != nil {
+		cfg.logger.Error("Ошибка завершения фоновых процессов", zap.Error(err))
+	}
 
-	<-ctxWithCancel.Done()
 	cfg.logger.Info("Программа завершена")
-}
-
-func setupSignalHandler(ctx context.Context, cancel context.CancelFunc, logger *zap.Logger) {
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-
-	go func() {
-		<-sigCh
-		logger.Info("Получен Ctrl+C, останавливаемся...")
-
-		cancel()
-	}()
 }
 
 func initDatabase(cfg config) *sql.DB {
@@ -124,7 +115,7 @@ func initConfig() config {
 	return cfg
 }
 
-func runPprofServer(ctx context.Context, logger *zap.Logger) {
+func runPprofServer(ctx context.Context, logger *zap.Logger, g *errgroup.Group) {
 	pprofServer := &http.Server{
 		Addr:         "localhost:6060",
 		Handler:      nil,
@@ -132,29 +123,35 @@ func runPprofServer(ctx context.Context, logger *zap.Logger) {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	go func() {
+	g.Go(func() error {
 		logger.Info("pprof server started",
 			zap.String("url", "http://localhost:6060/debug/pprof/"),
 		)
 		if err := pprofServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Error("pprof server error", zap.Error(err))
+			return err
 		}
-	}()
 
-	<-ctx.Done()
-	logger.Info("Остановка pprof сервера...")
+		return nil
+	})
 
-	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer shutdownCancel()
+	g.Go(func() error {
+		<-ctx.Done()
+		logger.Info("Остановка pprof сервера...")
 
-	if err := pprofServer.Shutdown(shutdownCtx); err != nil {
-		logger.Error("Ошибка остановки pprof сервера", zap.Error(err))
-	} else {
+		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer shutdownCancel()
+
+		if err := pprofServer.Shutdown(shutdownCtx); err != nil {
+			return err
+		}
+
 		logger.Info("pprof сервер остановлен")
-	}
+
+		return nil
+	})
 }
 
-func startServer(ctx context.Context, cfg config, components *AppComponents) {
+func startServer(ctx context.Context, cfg config, components *AppComponents, g *errgroup.Group) {
 	router := setupRouter(components, cfg.logger)
 
 	server := &http.Server{
@@ -162,22 +159,30 @@ func startServer(ctx context.Context, cfg config, components *AppComponents) {
 		Handler: router,
 	}
 
-	go func() {
+	g.Go(func() error {
 		cfg.logger.Info("Сервер запущен", zap.String("addr", cfg.ServerAddr.String()))
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			cfg.logger.Error("Ошибка сервера", zap.Error(err))
+			return err
 		}
-	}()
 
-	<-ctx.Done()
-	cfg.logger.Info("Остановка сервера...")
+		return nil
+	})
 
-	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer shutdownCancel()
+	g.Go(func() error {
+		<-ctx.Done()
+		cfg.logger.Info("Остановка сервера...")
 
-	if err := server.Shutdown(shutdownCtx); err != nil {
-		cfg.logger.Error("Ошибка остановки сервера", zap.Error(err))
-	}
+		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer shutdownCancel()
+
+		if err := server.Shutdown(shutdownCtx); err != nil {
+			return err
+		}
+
+		cfg.logger.Info("Сервер остановлен")
+
+		return nil
+	})
 }
 
 func setupRouter(components *AppComponents, logger *zap.Logger) *chi.Mux {

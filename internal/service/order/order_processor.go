@@ -8,6 +8,7 @@ import (
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/interfaces"
 	"go.uber.org/zap"
+	"golang.org/x/sync/errgroup"
 )
 
 // Количество воркеров
@@ -87,10 +88,10 @@ const (
 // StartDatabasePoller запускает фоновую проверку заказов,
 // требующих проверки начисления бонусов, и добавляет найденные заказы в очередь
 // на обработку.
-func (op *OrderProcessor) StartDatabasePoller(ctx context.Context) {
+func (op *OrderProcessor) StartDatabasePoller(ctx context.Context, g *errgroup.Group) {
 	tick := time.Tick(databasePollerInterval)
 
-	go func() {
+	g.Go(func() error {
 		for {
 			select {
 			case <-tick:
@@ -108,10 +109,10 @@ func (op *OrderProcessor) StartDatabasePoller(ctx context.Context) {
 					op.AddOrderIDToQueue(orderID)
 				}
 			case <-ctx.Done():
-				return
+				return nil
 			}
 		}
-	}()
+	})
 }
 
 // Start запускает фоновые воркеры для обработки заказов и обновления их данных.
@@ -122,7 +123,7 @@ func (op *OrderProcessor) StartDatabasePoller(ctx context.Context) {
 //
 // Воркеры обновления получают обработанные заказы из ordersProcessedCh
 // и сохраняют результаты в базе данных.
-func (op *OrderProcessor) Start(ctx context.Context) {
+func (op *OrderProcessor) Start(ctx context.Context, g *errgroup.Group) {
 	var wgProcessWorkers sync.WaitGroup
 	var wgSaveResults sync.WaitGroup
 
@@ -144,7 +145,7 @@ func (op *OrderProcessor) Start(ctx context.Context) {
 		}()
 	}
 
-	go func() {
+	g.Go(func() error {
 		<-ctx.Done()
 		op.logger.Info("Получен сигнал отмены. Ожидаем завершения воркеров...")
 
@@ -155,7 +156,9 @@ func (op *OrderProcessor) Start(ctx context.Context) {
 		wgSaveResults.Wait()
 
 		op.logger.Info("Все фоновые воркеры успешно завершили работу")
-	}()
+
+		return nil
+	})
 }
 
 // orderCheckStatus получает идентификаторы заказов из очереди
