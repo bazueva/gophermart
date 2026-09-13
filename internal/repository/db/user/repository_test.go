@@ -8,10 +8,8 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/helpers"
-	"github.com/bazueva/gofermart/internal/interfaces/mocks"
 	dbPkg "github.com/bazueva/gofermart/internal/repository/db"
 	"github.com/stretchr/testify/assert"
-	mock2 "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,10 +23,8 @@ func TestRepository_ExistLogin(t *testing.T) {
 			_ = db.Close()
 		}()
 
-		logger := mocks.NewMockLogger(t)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		expectedSQL := `SELECT (EXISTS (
@@ -57,10 +53,8 @@ func TestRepository_ExistLogin(t *testing.T) {
 			_ = db.Close()
 		}()
 
-		logger := mocks.NewMockLogger(t)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		expectedSQL := `SELECT (EXISTS (
@@ -91,11 +85,8 @@ func TestRepository_ExistLogin(t *testing.T) {
 
 		errorDB := errors.New("ошибка БД")
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("error ExistLogin", mock2.Anything)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		expectedSQL := `SELECT (EXISTS (
@@ -123,11 +114,8 @@ func TestRepository_ExistLogin(t *testing.T) {
 			_ = db.Close()
 		}()
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("error ExistLogin", mock2.Anything)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
 
@@ -148,7 +136,7 @@ func TestRepository_ExistLogin(t *testing.T) {
 		assert.False(t, exists)
 		assert.IsType(t, &entities.DomainError{}, err)
 		assert.Equal(t, err.(*entities.DomainError).ErrorType, entities.InternalServerErrorType)
-		assert.Equal(t, "jet: context canceled", err.(*entities.DomainError).SourceErr.Error())
+		assert.Equal(t, "error ExistLogin: jet: context canceled", err.(*entities.DomainError).SourceErr.Error())
 	})
 }
 
@@ -160,10 +148,8 @@ func TestRepository_CreateUser(t *testing.T) {
 			_ = db.Close()
 		}()
 
-		logger := mocks.NewMockLogger(t)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		user := entities.User{
@@ -192,11 +178,8 @@ func TestRepository_CreateUser(t *testing.T) {
 			_ = db.Close()
 		}()
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("error repository CreateUser", mock2.Anything)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		user := entities.User{
@@ -227,11 +210,8 @@ func TestRepository_CreateUser(t *testing.T) {
 			_ = db.Close()
 		}()
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("error repository CreateUser", mock2.Anything)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 
 		ctx, cancel := context.WithCancel(t.Context())
 		cancel()
@@ -253,7 +233,7 @@ func TestRepository_CreateUser(t *testing.T) {
 		assert.Equal(t, int32(0), userID)
 		assert.IsType(t, &entities.DomainError{}, err)
 		assert.Equal(t, err.(*entities.DomainError).ErrorType, entities.InternalServerErrorType)
-		assert.Equal(t, "jet: context canceled", err.(*entities.DomainError).SourceErr.Error())
+		assert.Equal(t, "error repository CreateUser: jet: context canceled", err.(*entities.DomainError).SourceErr.Error())
 	})
 }
 
@@ -267,9 +247,8 @@ func TestRepository_FindByLogin(t *testing.T) {
 		require.NoError(t, err)
 		defer db.Close()
 
-		logger := mocks.NewMockLogger(t)
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		expectedSQL := `SELECT users.id AS "users.id",
@@ -300,9 +279,8 @@ func TestRepository_FindByLogin(t *testing.T) {
 		require.NoError(t, err)
 		defer db.Close()
 
-		logger := mocks.NewMockLogger(t)
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		expectedSQL := `SELECT users.id AS "users.id",
@@ -332,11 +310,8 @@ func TestRepository_FindByLogin(t *testing.T) {
 		require.NoError(t, err)
 		defer db.Close()
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("error repository FindByLoginPassword", mock2.Anything)
-
 		dbWrapper := dbPkg.NewSQLDBWrapper(db)
-		repo := NewRepository(dbWrapper, logger)
+		repo := NewRepository(dbWrapper)
 		ctx := t.Context()
 
 		expectedSQL := `SELECT users.id AS "users.id",

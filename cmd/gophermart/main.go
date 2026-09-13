@@ -225,7 +225,7 @@ func initComponents(cfg config, db interfaces.DB) *AppComponents {
 		cfg.logger.Fatal("Ошибка инициализации репозитория бонусов", zap.Error(err))
 	}
 
-	userRepo := user.NewRepository(db, cfg.logger)
+	userRepo := user.NewRepository(db)
 	orderRepo := order.NewRepository(db)
 
 	// Воркеры

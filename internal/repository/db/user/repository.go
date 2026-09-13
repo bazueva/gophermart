@@ -11,7 +11,7 @@ import (
 	"github.com/bazueva/gofermart/schema.gen/gofermart/public/model"
 	"github.com/bazueva/gofermart/schema.gen/gofermart/public/table"
 	"github.com/go-jet/jet/v2/qrm"
-	"go.uber.org/zap"
+	errorsPkg "github.com/pkg/errors"
 )
 
 type repository struct {
@@ -29,9 +29,7 @@ func (r *repository) FindByLogin(ctx context.Context, login string) (entities.Us
 	err := queries.NewFindByLogin(login).
 		QueryContext(ctxWithTimeout, r.db, &result)
 	if err != nil && !errors.Is(err, qrm.ErrNoRows) {
-		r.logger.Error("error repository FindByLoginPassword", zap.Error(err))
-
-		return entities.User{}, entities.NewInternalServerError(err, "")
+		return entities.User{}, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository FindByLoginPassword"), "")
 	}
 
 	return entities.User{
@@ -61,9 +59,7 @@ func (r *repository) CreateUser(ctx context.Context, user entities.User) (int32,
 	}
 	err := query.QueryContext(ctxWithTimeout, r.db, &result)
 	if err != nil {
-		r.logger.Error("error repository CreateUser", zap.Error(err))
-
-		return 0, entities.NewInternalServerError(err, "")
+		return 0, entities.NewInternalServerError(errorsPkg.Wrap(err, "error repository CreateUser"), "")
 	}
 
 	return result.ID, nil
@@ -80,18 +76,15 @@ func (r *repository) ExistLogin(ctx context.Context, login string) (bool, *entit
 	err := queries.NewExistLogin(login).
 		QueryContext(ctxWithTimeout, r.db, &response)
 	if err != nil {
-		r.logger.Error("error ExistLogin", zap.Error(err))
-
-		return false, entities.NewInternalServerError(err, "")
+		return false, entities.NewInternalServerError(errorsPkg.Wrap(err, "error ExistLogin"), "")
 	}
 
 	return response.Exists, nil
 }
 
 // NewRepository создает новый репозиторий для работы с пользователями.
-func NewRepository(db interfaces.DB, logger interfaces.Logger) *repository {
+func NewRepository(db interfaces.DB) *repository {
 	return &repository{
 		db:     db,
-		logger: logger,
 	}
 }

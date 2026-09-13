@@ -12,6 +12,7 @@ import (
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/interfaces"
 	"github.com/go-resty/resty/v2"
+	errorsPkg "github.com/pkg/errors"
 	"go.uber.org/zap"
 )
 
@@ -38,9 +39,7 @@ func (r *repository) GetOrder(ctx context.Context, orderID string) (*entities.Or
 		SetHeader("Content-Type", "application/json").
 		Get(url)
 	if err != nil {
-		r.logger.Error("bonus repository error GetOrder", zap.Error(err), zap.String("order_id", orderID))
-
-		return nil, entities.NewInternalServerError(err, "")
+		return nil, entities.NewInternalServerError(errorsPkg.Wrap(err, "bonus repository error GetOrder"), "")
 	}
 
 	domainErr := r.checkResponseStatus(response.StatusCode(), orderID)
@@ -51,9 +50,7 @@ func (r *repository) GetOrder(ctx context.Context, orderID string) (*entities.Or
 	var result order
 	err = json.Unmarshal(response.Body(), &result)
 	if err != nil {
-		r.logger.Error("json unmarshal error", zap.Error(err), zap.String("order_id", orderID))
-
-		return nil, entities.NewInternalServerError(err, "")
+		return nil, entities.NewInternalServerError(errorsPkg.Wrap(err, "bonus repository error json unmarshal"), "")
 	}
 
 	if result.Order != orderID || result.Order == "" {
