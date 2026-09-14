@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	"github.com/bazueva/gofermart/internal/interfaces"
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 )
@@ -28,7 +27,7 @@ type Waiting interface {
 }
 
 type OrderProcessor struct {
-	logger             interfaces.Logger
+	logger             *zap.Logger
 	ordersProcessingCh chan string
 	ordersProcessedCh  chan entities.Order
 	bonusRepository    BonusRepository
@@ -65,7 +64,7 @@ func NewOrderProcessor(
 	bonusRepository BonusRepository,
 	orderRepository OrderRepository,
 	waiter Waiting,
-	logger interfaces.Logger,
+	logger *zap.Logger,
 ) *OrderProcessor {
 	// канал для обработки заказов, у которых статус NEW, PROCESSING
 	ordersProcessingCh := make(chan string, workerCount*5)

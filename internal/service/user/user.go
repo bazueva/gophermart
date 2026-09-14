@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	"github.com/bazueva/gofermart/internal/interfaces"
 	"github.com/bazueva/gofermart/internal/models/forms"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v4"
@@ -27,7 +26,7 @@ type Repository interface {
 type UserService struct {
 	repository    Repository
 	formValidator *validator.Validate
-	logger        interfaces.Logger
+	logger        *zap.Logger
 	secretKey     string
 }
 
@@ -194,7 +193,7 @@ func (u *UserService) generateJWTToken(userID int32) (string, error) {
 }
 
 // NewUserService создает новый экземпляр сервиса пользователей.
-func NewUserService(repository Repository, logger interfaces.Logger, secretKey string) *UserService {
+func NewUserService(repository Repository, logger *zap.Logger, secretKey string) *UserService {
 	service := &UserService{
 		logger:        logger,
 		repository:    repository,

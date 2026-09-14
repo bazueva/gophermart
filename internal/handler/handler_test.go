@@ -11,11 +11,11 @@ import (
 
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/handler/mocks"
-	interfacesMocks "github.com/bazueva/gofermart/internal/interfaces/mocks"
 	"github.com/bazueva/gofermart/internal/models"
 	"github.com/stretchr/testify/assert"
-	mock2 "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest/observer"
 )
 
 func TestHandler_LoginUser(t *testing.T) {
@@ -23,7 +23,7 @@ func TestHandler_LoginUser(t *testing.T) {
 
 	t.Run("success - login user", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		loginRequest := models.LoginRequest{
 			Login:    "testuser",
@@ -58,7 +58,7 @@ func TestHandler_LoginUser(t *testing.T) {
 
 	t.Run("error - invalid request body", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(http.MethodPost, "/api/user/login", bytes.NewReader([]byte("{invalid json}")))
 		w := httptest.NewRecorder()
@@ -80,7 +80,7 @@ func TestHandler_LoginUser(t *testing.T) {
 
 	t.Run("error - app login failed", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		loginRequest := models.LoginRequest{
 			Login:    "testuser",
@@ -112,7 +112,7 @@ func TestHandler_LoginUser(t *testing.T) {
 
 	t.Run("error - empty login", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		loginRequest := models.LoginRequest{
 			Login:    "",
@@ -148,7 +148,7 @@ func TestHandler_RegisterUser(t *testing.T) {
 
 	t.Run("success - register user", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		registerRequest := models.RegisterRequest{
 			Login:    "newuser",
@@ -183,7 +183,7 @@ func TestHandler_RegisterUser(t *testing.T) {
 
 	t.Run("error - invalid request body", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(http.MethodPost, "/api/user/register", bytes.NewReader([]byte("{invalid json}")))
 		w := httptest.NewRecorder()
@@ -200,7 +200,7 @@ func TestHandler_RegisterUser(t *testing.T) {
 
 	t.Run("error - user already exists", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		registerRequest := models.RegisterRequest{
 			Login:    "existinguser",
@@ -232,7 +232,7 @@ func TestHandler_RegisterUser(t *testing.T) {
 
 	t.Run("error - empty login", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		registerRequest := models.RegisterRequest{
 			Login:    "",
@@ -268,7 +268,7 @@ func TestHandler_CreateOrder(t *testing.T) {
 
 	t.Run("success - create order", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		orderID := "12345678903"
 		req := httptest.NewRequest(http.MethodPost, "/api/user/orders", bytes.NewReader([]byte(orderID)))
@@ -290,7 +290,7 @@ func TestHandler_CreateOrder(t *testing.T) {
 
 	t.Run("error - empty order ID", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(http.MethodPost, "/api/user/orders", bytes.NewReader([]byte("")))
 		w := httptest.NewRecorder()
@@ -312,7 +312,7 @@ func TestHandler_CreateOrder(t *testing.T) {
 
 	t.Run("error - create order", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		orderID := "12345678903"
 		req := httptest.NewRequest(http.MethodPost, "/api/user/orders", bytes.NewReader([]byte(orderID)))
@@ -343,7 +343,7 @@ func TestHandler_UserOrdersList(t *testing.T) {
 
 	t.Run("success - get user orders", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(http.MethodGet, "/api/user/orders?page=1&perPage=20", nil)
 		w := httptest.NewRecorder()
@@ -382,7 +382,7 @@ func TestHandler_UserOrdersList(t *testing.T) {
 
 	t.Run("success - empty orders returns NoContent", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(http.MethodGet, "/api/user/orders?page=1&perPage=20", nil)
 		w := httptest.NewRecorder()
@@ -403,7 +403,9 @@ func TestHandler_UserOrdersList(t *testing.T) {
 
 	t.Run("error - internal server error", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		req := httptest.NewRequest(http.MethodGet, "/api/user/orders?page=1&perPage=20", nil)
 		w := httptest.NewRecorder()
@@ -417,8 +419,6 @@ func TestHandler_UserOrdersList(t *testing.T) {
 			UserOrdersList(req.Context(), int32(1), int32(20)).
 			Return(nil, domainErr)
 
-		logger.EXPECT().Error("error handler", mock2.Anything)
-
 		h := &Handler{
 			app:    mockApp,
 			logger: logger,
@@ -427,6 +427,7 @@ func TestHandler_UserOrdersList(t *testing.T) {
 		h.UserOrdersList(w, req)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		assert.Equal(t, "error handler", logs.All()[0].Message)
 	})
 }
 
@@ -435,7 +436,7 @@ func TestHandler_BalanceWithdraw(t *testing.T) {
 
 	t.Run("success - balance withdraw", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		withdrawRequest := models.BalanceWithdrawRequest{
 			Order: "1234567890",
@@ -466,7 +467,7 @@ func TestHandler_BalanceWithdraw(t *testing.T) {
 
 	t.Run("error - invalid request body", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(
 			http.MethodPost,
@@ -497,7 +498,7 @@ func TestHandler_BalanceWithdraw(t *testing.T) {
 
 	t.Run("error - app balance withdraw failed", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		withdrawRequest := models.BalanceWithdrawRequest{
 			Order: "1234567890",
@@ -533,7 +534,7 @@ func TestHandler_BalanceWithdraw(t *testing.T) {
 
 	t.Run("error - app returns bad request", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		withdrawRequest := models.BalanceWithdrawRequest{
 			Order: "1234567890",
@@ -573,7 +574,7 @@ func TestHandler_UserWithdrawals(t *testing.T) {
 
 	t.Run("success - user withdrawals", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -636,7 +637,7 @@ func TestHandler_UserWithdrawals(t *testing.T) {
 
 	t.Run("success - no withdrawals", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -662,7 +663,8 @@ func TestHandler_UserWithdrawals(t *testing.T) {
 
 	t.Run("error - app user withdrawals failed", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -680,8 +682,6 @@ func TestHandler_UserWithdrawals(t *testing.T) {
 			UserWithdrawals(req.Context(), int32(1), int32(10)).
 			Return(nil, domainErr)
 
-		logger.EXPECT().Error("error handler", mock2.Anything)
-
 		h := &Handler{
 			app:    mockApp,
 			logger: logger,
@@ -690,13 +690,14 @@ func TestHandler_UserWithdrawals(t *testing.T) {
 		h.UserWithdrawals(w, req)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		assert.Equal(t, "error handler", logs.All()[0].Message)
 	})
 
 	t.Run("success - zero values in pagination", func(t *testing.T) {
 		t.Parallel()
 
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -740,7 +741,7 @@ func TestHandler_UserBalance(t *testing.T) {
 
 	t.Run("success - get user balance", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -777,7 +778,7 @@ func TestHandler_UserBalance(t *testing.T) {
 
 	t.Run("success - zero balance", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -814,7 +815,9 @@ func TestHandler_UserBalance(t *testing.T) {
 
 	t.Run("error - app user balance failed", func(t *testing.T) {
 		mockApp := mocks.NewMockApp(t)
-		logger := interfacesMocks.NewMockLogger(t)
+
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		req := httptest.NewRequest(
 			http.MethodGet,
@@ -832,8 +835,6 @@ func TestHandler_UserBalance(t *testing.T) {
 			UserBalance(req.Context()).
 			Return(entities.Balance{}, domainErr)
 
-		logger.EXPECT().Error("error handler", mock2.Anything)
-
 		h := &Handler{
 			app:    mockApp,
 			logger: logger,
@@ -842,5 +843,6 @@ func TestHandler_UserBalance(t *testing.T) {
 		h.UserBalance(w, req)
 
 		assert.Equal(t, http.StatusInternalServerError, w.Code)
+		assert.Equal(t, "error handler", logs.All()[0].Message)
 	})
 }

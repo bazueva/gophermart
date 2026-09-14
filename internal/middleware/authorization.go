@@ -6,7 +6,6 @@ import (
 
 	"github.com/bazueva/gofermart/internal/context"
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	"github.com/bazueva/gofermart/internal/interfaces"
 )
 
 type CheckerJWTToken interface {
@@ -14,7 +13,7 @@ type CheckerJWTToken interface {
 }
 
 // Authorization middleware для проверки авторизации пользователя.
-func Authorization(checkerToken CheckerJWTToken, logger interfaces.Logger) func(next http.Handler) http.Handler {
+func Authorization(checkerToken CheckerJWTToken) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			authHeader := r.Header.Get("Authorization")

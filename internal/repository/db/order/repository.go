@@ -22,7 +22,6 @@ const (
 
 type repository struct {
 	db              interfaces.DB
-	logger          interfaces.Logger
 	errorClassifier *dbPkg.PostgresErrorClassifier
 }
 

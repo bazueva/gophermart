@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	"github.com/bazueva/gofermart/internal/interfaces"
 	"github.com/bazueva/gofermart/internal/models"
 	"github.com/spf13/cast"
 	"go.uber.org/zap"
@@ -26,12 +25,12 @@ type App interface {
 
 // Handler обрабатывает HTTP-запросы приложения.
 type Handler struct {
-	logger interfaces.Logger
+	logger *zap.Logger
 	app    App
 }
 
 // NewHandler создает новый обработчик HTTP-запросов.
-func NewHandler(logger interfaces.Logger, application App) *Handler {
+func NewHandler(logger *zap.Logger, application App) *Handler {
 	return &Handler{
 		logger: logger,
 		app:    application,

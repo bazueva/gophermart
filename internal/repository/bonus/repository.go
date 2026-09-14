@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	"github.com/bazueva/gofermart/internal/interfaces"
 	"github.com/go-resty/resty/v2"
 	errorsPkg "github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -20,7 +19,7 @@ import (
 type repository struct {
 	client     *resty.Client
 	addr       string
-	logger     interfaces.Logger
+	logger     *zap.Logger
 	waitSetter WaitSetter
 }
 
@@ -80,7 +79,7 @@ func (r *repository) GetOrder(ctx context.Context, orderID string) (*entities.Or
 func (r *repository) checkResponseStatus(code int, orderID string) *entities.DomainError {
 	switch code {
 	case http.StatusNoContent:
-		r.logger.Error("Заказ не найден",
+		r.logger.Info("Заказ не найден",
 			zap.String("order_id", orderID),
 		)
 
@@ -102,7 +101,7 @@ func (r *repository) checkResponseStatus(code int, orderID string) *entities.Dom
 }
 
 // NewRepository создает новый экземпляр репозитория бонусов.
-func NewRepository(addr string, waiter WaitSetter, logger interfaces.Logger) (*repository, error) {
+func NewRepository(addr string, waiter WaitSetter, logger *zap.Logger) (*repository, error) {
 	if addr == "" {
 		return nil, fmt.Errorf("не указан адрес сервера")
 	}
@@ -116,7 +115,7 @@ func NewRepository(addr string, waiter WaitSetter, logger interfaces.Logger) (*r
 }
 
 // createClient создает новый экземпляр клиента для работы с сервисом бонусов.
-func createClient(logger interfaces.Logger, waiter WaitSetter) *resty.Client {
+func createClient(logger *zap.Logger, waiter WaitSetter) *resty.Client {
 	return resty.New().
 		SetRetryCount(3).
 		SetRetryAfter(func(client *resty.Client, response *resty.Response) (time.Duration, error) {

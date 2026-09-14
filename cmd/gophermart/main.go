@@ -195,7 +195,7 @@ func setupRouter(components *AppComponents, logger *zap.Logger) *chi.Mux {
 	router.Post("/api/user/login", components.Handler.LoginUser)
 
 	router.Group(func(r chi.Router) {
-		r.Use(middleware.Authorization(components.App, logger))
+		r.Use(middleware.Authorization(components.App))
 
 		r.Post("/api/user/orders", components.Handler.CreateOrder)
 		r.Get("/api/user/orders", components.Handler.UserOrdersList)

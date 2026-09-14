@@ -8,11 +8,11 @@ import (
 	"github.com/bazueva/gofermart/internal/context"
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/domain/pagination"
-	"github.com/bazueva/gofermart/internal/interfaces/mocks"
 	"github.com/bazueva/gofermart/internal/models"
 	"github.com/bazueva/gofermart/internal/models/forms"
 	"github.com/stretchr/testify/assert"
-	mock2 "github.com/stretchr/testify/mock"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest/observer"
 )
 
 func TestApp_CreateOrder(t *testing.T) {
@@ -21,19 +21,20 @@ func TestApp_CreateOrder(t *testing.T) {
 	t.Run("ctx without userID", func(t *testing.T) {
 		t.Parallel()
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("ctx without userID", mock2.Anything)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		appTest := NewApp(nil, nil, logger)
 		err := appTest.CreateOrder(t.Context(), "test")
 
 		assert.Equal(t, "Internal Server Error", err.Error())
+		assert.Equal(t, "ctx without userID", logs.All()[0].Message)
 	})
 
 	t.Run("userID = 0", func(t *testing.T) {
 		t.Parallel()
 
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 0)
 		appTest := NewApp(nil, nil, logger)
@@ -46,7 +47,7 @@ func TestApp_CreateOrder(t *testing.T) {
 	t.Run("error create order", func(t *testing.T) {
 		t.Parallel()
 
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 20)
 
@@ -64,7 +65,7 @@ func TestApp_CreateOrder(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 20)
 
@@ -304,9 +305,8 @@ func TestApp_UserOrdersList(t *testing.T) {
 			"",
 		)
 
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().
-			Error("ctx without userID", mock2.Anything)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		a := &App{
 			logger: logger,
@@ -317,6 +317,7 @@ func TestApp_UserOrdersList(t *testing.T) {
 		assert.Error(t, err)
 		assert.Nil(t, orders)
 		assert.Equal(t, domainErr, err)
+		assert.Equal(t, "ctx without userID", logs.All()[0].Message)
 	})
 
 	t.Run("error - order service failed", func(t *testing.T) {
@@ -352,7 +353,7 @@ func TestApp_UserIDFromContext(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success - get userID from context", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 		ctx := context.WithUserID(t.Context(), 123)
 
 		a := &App{
@@ -366,7 +367,7 @@ func TestApp_UserIDFromContext(t *testing.T) {
 	})
 
 	t.Run("success - userID 0 with errorIfEmpty false", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 		ctx := context.WithUserID(t.Context(), 0)
 
 		a := &App{
@@ -380,9 +381,8 @@ func TestApp_UserIDFromContext(t *testing.T) {
 	})
 
 	t.Run("error - context without Auth", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().
-			Error("ctx without userID", mock2.Anything)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		ctx := t.Context()
 
@@ -395,10 +395,11 @@ func TestApp_UserIDFromContext(t *testing.T) {
 		assert.Error(t, err)
 		assert.Equal(t, int32(0), userID)
 		assert.Equal(t, entities.InternalServerErrorType, err.ErrorType)
+		assert.Equal(t, "ctx without userID", logs.All()[0].Message)
 	})
 
 	t.Run("error - userID 0 with errorIfEmpty true", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 		ctx := context.WithUserID(t.Context(), 0)
 
 		a := &App{
@@ -418,7 +419,7 @@ func TestApp_BalanceWithDraw(t *testing.T) {
 
 	t.Run("success - balance withdraw", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 		request := models.BalanceWithdrawRequest{
@@ -444,7 +445,7 @@ func TestApp_BalanceWithDraw(t *testing.T) {
 	})
 
 	t.Run("error - user not authorized", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 0)
 		request := models.BalanceWithdrawRequest{
@@ -463,8 +464,8 @@ func TestApp_BalanceWithDraw(t *testing.T) {
 	})
 
 	t.Run("error - context without Auth", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
-		logger.EXPECT().Error("ctx without userID", mock2.Anything)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		ctx := t.Context()
 		request := models.BalanceWithdrawRequest{
@@ -480,11 +481,12 @@ func TestApp_BalanceWithDraw(t *testing.T) {
 
 		assert.Error(t, err)
 		assert.Equal(t, entities.InternalServerErrorType, err.ErrorType)
+		assert.Equal(t, "ctx without userID", logs.All()[0].Message)
 	})
 
 	t.Run("error - order service failed", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 		request := models.BalanceWithdrawRequest{
@@ -521,7 +523,7 @@ func TestApp_UserWithdrawals(t *testing.T) {
 
 	t.Run("success - get user withdrawals", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 		page := int32(1)
@@ -561,7 +563,7 @@ func TestApp_UserWithdrawals(t *testing.T) {
 
 	t.Run("success - empty withdrawals list", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 		page := int32(1)
@@ -583,7 +585,7 @@ func TestApp_UserWithdrawals(t *testing.T) {
 	})
 
 	t.Run("error - user not authorized", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 0)
 		page := int32(1)
@@ -601,7 +603,8 @@ func TestApp_UserWithdrawals(t *testing.T) {
 	})
 
 	t.Run("error - context without Auth", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		ctx := t.Context()
 		page := int32(1)
@@ -611,18 +614,17 @@ func TestApp_UserWithdrawals(t *testing.T) {
 			logger: logger,
 		}
 
-		logger.EXPECT().Error("ctx without userID", mock2.Anything).Return()
-
 		orders, err := a.UserWithdrawals(ctx, page, perPage)
 
 		assert.Error(t, err)
 		assert.Nil(t, orders)
 		assert.Equal(t, entities.InternalServerErrorType, err.ErrorType)
+		assert.Equal(t, "ctx without userID", logs.All()[0].Message)
 	})
 
 	t.Run("error - order service failed", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 		page := int32(1)
@@ -655,7 +657,7 @@ func TestApp_UserBalance(t *testing.T) {
 
 	t.Run("success balance", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 
@@ -678,7 +680,7 @@ func TestApp_UserBalance(t *testing.T) {
 	})
 
 	t.Run("error - user not authorized", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 0)
 
@@ -694,7 +696,8 @@ func TestApp_UserBalance(t *testing.T) {
 	})
 
 	t.Run("error - context without Auth", func(t *testing.T) {
-		logger := mocks.NewMockLogger(t)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		ctx := t.Context()
 
@@ -702,18 +705,17 @@ func TestApp_UserBalance(t *testing.T) {
 			logger: logger,
 		}
 
-		logger.EXPECT().Error("ctx without userID", mock2.Anything).Return()
-
 		balance, err := a.UserBalance(ctx)
 
 		assert.Error(t, err)
 		assert.Empty(t, balance)
 		assert.Equal(t, entities.InternalServerErrorType, err.ErrorType)
+		assert.Equal(t, "ctx without userID", logs.All()[0].Message)
 	})
 
 	t.Run("error - order service failed", func(t *testing.T) {
 		mockOrderService := appMocks.NewMockOrderService(t)
-		logger := mocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		ctx := context.WithUserID(t.Context(), 123)
 

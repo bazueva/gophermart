@@ -30,7 +30,7 @@ type OrderQueue interface {
 // Order Сервис заказов.
 type Order struct {
 	repository Repository
-	logger     interfaces.Logger
+	logger     *zap.Logger
 	orderQueue OrderQueue
 }
 
@@ -101,10 +101,6 @@ func (o *Order) BalanceWithdraw(ctx context.Context, userID int32, withdraw enti
 
 	ctx = dbPkg.WithTx(ctx, tx)
 
-	if errDomain = o.tryAdvisoryLock(ctx, tx, lockTypeCreateOrderWithdraw, int64(userID)); errDomain != nil {
-		return errDomain
-	}
-
 	userBalance, errDomain := o.repository.UserBalance(ctx, userID)
 	if errDomain != nil {
 		return errDomain
@@ -125,48 +121,6 @@ func (o *Order) BalanceWithdraw(ctx context.Context, userID int32, withdraw enti
 		o.logger.Error("ошибка Commit", zap.Error(err))
 
 		return entities.NewInternalServerError(err, "")
-	}
-
-	return nil
-}
-
-// tryAdvisoryLock устанавливает advisory-блокировку для указанного ключа.
-// Если блокировка уже установлена другой операцией, возвращает ошибку
-// о невозможности выполнить операцию параллельно.
-func (o *Order) tryAdvisoryLock(
-	ctx context.Context,
-	tx interfaces.Tx,
-	lockType int64,
-	key int64,
-) *entities.DomainError {
-	ok, err := dbPkg.TryLock(
-		ctx,
-		tx,
-		lockType,
-		key,
-	)
-	if err != nil {
-		o.logger.Error(
-			"ошибка выполнения запроса блокировки",
-			zap.Error(err),
-			zap.Int64("key", key),
-			zap.Int64("lockType", lockType),
-		)
-
-		return entities.NewInternalServerError(err, "")
-	}
-
-	if !ok {
-		o.logger.Warn(
-			"запрос отклонен: операция уже выполняется параллельно",
-			zap.Int64("key", key),
-			zap.Int64("lockType", lockType),
-		)
-
-		return entities.NewTooManyRequestError(
-			nil,
-			"операция уже выполняется, попробуйте позже",
-		)
 	}
 
 	return nil
@@ -275,7 +229,7 @@ func (o *Order) validateWithdraw(userID int32, userBalance float64, withdraw ent
 func NewOrder(
 	repository Repository,
 	orderQueue OrderQueue,
-	logger interfaces.Logger,
+	logger *zap.Logger,
 ) *Order {
 	return &Order{
 		repository: repository,

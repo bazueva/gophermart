@@ -16,7 +16,6 @@ import (
 
 type repository struct {
 	db     interfaces.DB
-	logger interfaces.Logger
 }
 
 // FindByLogin поиск пользователя по логину.

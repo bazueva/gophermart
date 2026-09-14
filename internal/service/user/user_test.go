@@ -7,13 +7,14 @@ import (
 	"time"
 
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	interfacesMocks "github.com/bazueva/gofermart/internal/interfaces/mocks"
 	"github.com/bazueva/gofermart/internal/models/forms"
 	"github.com/bazueva/gofermart/internal/service/user/mocks"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest/observer"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -106,7 +107,7 @@ func Test_createUser(t *testing.T) {
 			CreateUser(mock.Anything, mock.Anything).
 			Return(int32(19), nil)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "")
 
@@ -126,9 +127,8 @@ func Test_createUser(t *testing.T) {
 
 		mockRepo := mocks.NewMockRepository(t)
 
-		logger := interfacesMocks.NewMockLogger(t)
-		logger.EXPECT().
-			Error("error hash password", mock.Anything)
+		core, logs := observer.New(zap.ErrorLevel)
+		logger := zap.New(core)
 
 		service := NewUserService(mockRepo, logger, "")
 
@@ -145,6 +145,7 @@ func Test_createUser(t *testing.T) {
 			Text:      "Internal Server Error",
 			SourceErr: errors.New("bcrypt: password length exceeds 72 bytes"),
 		}, err)
+		assert.Equal(t, "error hash password", logs.All()[0].Message)
 	})
 
 	t.Run("repository returns domain error", func(t *testing.T) {
@@ -155,7 +156,7 @@ func Test_createUser(t *testing.T) {
 			CreateUser(mock.Anything, mock.Anything).
 			Return(int32(0), entities.NewConflictError(nil, "login already exists"))
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "")
 
@@ -278,7 +279,7 @@ func TestUserService_Login(t *testing.T) {
 				PasswordHash: string(hashedPassword),
 			}, nil)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret-key")
 
@@ -298,7 +299,7 @@ func TestUserService_Login(t *testing.T) {
 
 		mockRepo := mocks.NewMockRepository(t)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 		service := NewUserService(mockRepo, logger, "test-secret-key")
 
 		loginForm := forms.LoginForm{
@@ -320,7 +321,7 @@ func TestUserService_Login(t *testing.T) {
 
 		mockRepo := mocks.NewMockRepository(t)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 		service := NewUserService(mockRepo, logger, "test-secret-key")
 
 		loginForm := forms.LoginForm{
@@ -345,8 +346,7 @@ func TestUserService_Login(t *testing.T) {
 			FindByLogin(mock.Anything, "nonexistent").
 			Return(entities.User{}, entities.NewInternalServerError(nil, ""))
 
-		logger := interfacesMocks.NewMockLogger(t)
-
+		logger := zap.NewNop()
 		service := NewUserService(mockRepo, logger, "test-secret-key")
 
 		loginForm := forms.LoginForm{
@@ -371,7 +371,7 @@ func TestUserService_Login(t *testing.T) {
 			FindByLogin(mock.Anything, "nonexistent").
 			Return(entities.User{}, nil)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret-key")
 
@@ -401,7 +401,7 @@ func TestUserService_Login(t *testing.T) {
 				PasswordHash: string(hashedPassword),
 			}, nil)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 		service := NewUserService(mockRepo, logger, "test-secret-key")
 
 		loginForm := forms.LoginForm{
@@ -428,7 +428,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -450,7 +450,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -474,7 +474,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -496,7 +496,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -512,7 +512,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -536,7 +536,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -560,7 +560,7 @@ func TestUserService_CheckJWTToken(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		service := NewUserService(mockRepo, mockLogger, secretKey)
 
@@ -598,7 +598,7 @@ func TestUserService_Register(t *testing.T) {
 			})).
 			Return(int32(19), nil)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret")
 
@@ -622,7 +622,7 @@ func TestUserService_Register(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret")
 
@@ -647,7 +647,7 @@ func TestUserService_Register(t *testing.T) {
 			ExistLogin(mock.Anything, "existinguser").
 			Return(true, nil)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret")
 
@@ -679,7 +679,7 @@ func TestUserService_Register(t *testing.T) {
 			ExistLogin(mock.Anything, "testuser").
 			Return(false, expectedErr)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret")
 
@@ -718,7 +718,7 @@ func TestUserService_Register(t *testing.T) {
 			).
 			Return(int32(0), expectedErr)
 
-		logger := interfacesMocks.NewMockLogger(t)
+		logger := zap.NewNop()
 
 		service := NewUserService(mockRepo, logger, "test-secret")
 

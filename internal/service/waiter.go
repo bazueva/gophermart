@@ -17,11 +17,17 @@ func NewWaiter() *waiter {
 func (w *waiter) Set(duration time.Duration) {
 	newUntil := time.Now().Add(duration).UnixNano()
 
-	if newUntil <= w.until.Load() {
-		return
-	}
+	for {
+		currentUntil := w.until.Load()
 
-	w.until.Store(newUntil)
+		if newUntil <= currentUntil {
+			return
+		}
+
+		if w.until.CompareAndSwap(currentUntil, newUntil) {
+			return
+		}
+	}
 }
 
 func (w *waiter) Wait(ctx context.Context) error {

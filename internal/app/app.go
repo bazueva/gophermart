@@ -7,7 +7,6 @@ import (
 	contextPkg "github.com/bazueva/gofermart/internal/context"
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/domain/pagination"
-	"github.com/bazueva/gofermart/internal/interfaces"
 	"github.com/bazueva/gofermart/internal/models"
 	"github.com/bazueva/gofermart/internal/models/forms"
 	"go.uber.org/zap"
@@ -31,7 +30,7 @@ type OrderService interface {
 type App struct {
 	userService  UserService
 	orderService OrderService
-	logger       interfaces.Logger
+	logger       *zap.Logger
 }
 
 // UserBalance возвращает баланс пользователя.
@@ -129,7 +128,7 @@ func (a *App) Register(ctx context.Context, request models.RegisterRequest) (str
 func NewApp(
 	userService UserService,
 	orderService OrderService,
-	logger interfaces.Logger,
+	logger *zap.Logger,
 ) *App {
 	return &App{
 		userService:  userService,

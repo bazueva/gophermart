@@ -4,7 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/bazueva/gofermart/internal/domain/entities"
 	"github.com/bazueva/gofermart/internal/domain/pagination"
 	"github.com/bazueva/gofermart/internal/helpers"
@@ -13,6 +12,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	mock2 "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest/observer"
 )
 
 func TestOrder_CreateOrder(t *testing.T) {
@@ -21,7 +22,8 @@ func TestOrder_CreateOrder(t *testing.T) {
 	t.Run("success - create order", func(t *testing.T) {
 		mockRepo := mocks.NewMockRepository(t)
 		mockQueue := mocks.NewMockOrderQueue(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		core, logs := observer.New(zap.InfoLevel)
+		mockLogger := zap.New(core)
 
 		ctx := t.Context()
 		orderID := "12345678903"
@@ -37,8 +39,6 @@ func TestOrder_CreateOrder(t *testing.T) {
 
 		mockQueue.EXPECT().AddOrderIDToQueue(orderID)
 
-		mockLogger.EXPECT().Info("Заказ отправлен в очередь на обработку", mock2.Anything)
-
 		o := &Order{
 			repository: mockRepo,
 			orderQueue: mockQueue,
@@ -48,6 +48,7 @@ func TestOrder_CreateOrder(t *testing.T) {
 		err := o.CreateOrder(ctx, orderID, userID)
 
 		assert.Nil(t, err)
+		assert.Equal(t, "Заказ отправлен в очередь на обработку", logs.All()[0].Message)
 	})
 
 	t.Run("error - validation luhn failed", func(t *testing.T) {
@@ -542,21 +543,8 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 			Sum:   100,
 		}
 
-		db, sqlMock, err := helpers.SQLMockTest(t)
+		_, sqlMock, err := helpers.SQLMockTest(t)
 		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnRows(
-				sqlmock.NewRows([]string{"pg_try_advisory_xact_lock"}).
-					AddRow(true),
-			)
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
 
 		mockRepo.EXPECT().
 			FindByOrderID(ctx, orderID).
@@ -565,17 +553,6 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 		mockRepo.EXPECT().
 			BeginTransaction(ctx).
 			Return(mockTx, nil)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
 
 		mockRepo.EXPECT().
 			UserBalance(mock2.Anything, userID).
@@ -645,7 +622,8 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 		t.Parallel()
 
 		mockRepo := mocks.NewMockRepository(t)
-		logger := interfacesMocks.NewMockLogger(t)
+		core, logs := observer.New(zap.InfoLevel)
+		logger := zap.New(core)
 
 		ctx := t.Context()
 		userID := int32(123)
@@ -666,8 +644,6 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 			BeginTransaction(ctx).
 			Return(nil, beginErr)
 
-		logger.EXPECT().Error("ошибка начала транзакции", mock2.Anything)
-
 		o := &Order{
 			repository: mockRepo,
 			logger:     logger,
@@ -677,148 +653,7 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 
 		require.NotNil(t, errDomain)
 		assert.Equal(t, entities.InternalServerErrorType, errDomain.ErrorType)
-	})
-
-	t.Run("error - advisory lock failed", func(t *testing.T) {
-		t.Parallel()
-
-		mockRepo := mocks.NewMockRepository(t)
-		mockTx := interfacesMocks.NewMockTx(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
-
-		ctx := t.Context()
-		userID := int32(123)
-		orderID := "12345678903"
-
-		withdraw := entities.BalanceWithdraw{
-			Order: orderID,
-			Sum:   100,
-		}
-
-		db, sqlMock, err := helpers.SQLMockTest(t)
-		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnError(errors.New("advisory lock error"))
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
-
-		mockRepo.EXPECT().
-			FindByOrderID(ctx, orderID).
-			Return(nil, nil)
-
-		mockRepo.EXPECT().
-			BeginTransaction(ctx).
-			Return(mockTx, nil)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
-
-		mockTx.EXPECT().
-			Rollback().
-			Return(nil)
-
-		mockLogger.EXPECT().Error("ошибка выполнения запроса блокировки", mock2.Anything)
-
-		o := &Order{
-			repository: mockRepo,
-			logger:     mockLogger,
-		}
-
-		errDomain := o.BalanceWithdraw(ctx, userID, withdraw)
-
-		require.NotNil(t, errDomain)
-		assert.Equal(t, entities.InternalServerErrorType, errDomain.ErrorType)
-
-		require.NoError(t, sqlMock.ExpectationsWereMet())
-	})
-
-	t.Run("error - advisory lock already acquired", func(t *testing.T) {
-		t.Parallel()
-
-		mockRepo := mocks.NewMockRepository(t)
-		mockTx := interfacesMocks.NewMockTx(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
-
-		ctx := t.Context()
-		userID := int32(123)
-		orderID := "12345678903"
-
-		withdraw := entities.BalanceWithdraw{
-			Order: orderID,
-			Sum:   100,
-		}
-
-		db, sqlMock, err := helpers.SQLMockTest(t)
-		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnRows(
-				sqlmock.NewRows([]string{"pg_try_advisory_xact_lock"}).
-					AddRow(false),
-			)
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
-
-		mockRepo.EXPECT().
-			FindByOrderID(ctx, orderID).
-			Return(nil, nil)
-
-		mockRepo.EXPECT().
-			BeginTransaction(ctx).
-			Return(mockTx, nil)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
-
-		mockTx.EXPECT().
-			Rollback().
-			Return(nil)
-
-		mockLogger.EXPECT().
-			Warn(
-				"запрос отклонен: операция уже выполняется параллельно",
-				mock2.Anything,
-				mock2.Anything,
-			)
-
-		o := &Order{
-			repository: mockRepo,
-			logger:     mockLogger,
-		}
-
-		errDomain := o.BalanceWithdraw(ctx, userID, withdraw)
-
-		require.NotNil(t, errDomain)
-		assert.Equal(t, entities.TooManyRequestErrorType, errDomain.ErrorType)
-
-		require.NoError(t, sqlMock.ExpectationsWereMet())
+		assert.Equal(t, "ошибка начала транзакции", logs.All()[0].Message)
 	})
 
 	t.Run("error - get user balance failed", func(t *testing.T) {
@@ -826,7 +661,7 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 
 		mockRepo := mocks.NewMockRepository(t)
 		mockTx := interfacesMocks.NewMockTx(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		mockLogger := zap.NewNop()
 
 		ctx := t.Context()
 		userID := int32(123)
@@ -850,32 +685,8 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 			BeginTransaction(ctx).
 			Return(mockTx, nil)
 
-		db, sqlMock, err := helpers.SQLMockTest(t)
+		_, sqlMock, err := helpers.SQLMockTest(t)
 		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnRows(
-				sqlmock.NewRows([]string{"pg_try_advisory_xact_lock"}).
-					AddRow(true),
-			)
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
 
 		mockRepo.EXPECT().
 			UserBalance(mock2.Anything, userID).
@@ -920,33 +731,6 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 		mockRepo.EXPECT().
 			BeginTransaction(ctx).
 			Return(mockTx, nil)
-
-		db, sqlMock, err := helpers.SQLMockTest(t)
-		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnRows(
-				sqlmock.NewRows([]string{"pg_try_advisory_xact_lock"}).
-					AddRow(true),
-			)
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
 
 		mockRepo.EXPECT().
 			UserBalance(mock2.Anything, userID).
@@ -994,32 +778,8 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 			BeginTransaction(ctx).
 			Return(mockTx, nil)
 
-		db, sqlMock, err := helpers.SQLMockTest(t)
+		_, sqlMock, err := helpers.SQLMockTest(t)
 		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnRows(
-				sqlmock.NewRows([]string{"pg_try_advisory_xact_lock"}).
-					AddRow(true),
-			)
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
 
 		mockRepo.EXPECT().
 			UserBalance(mock2.Anything, userID).
@@ -1055,7 +815,8 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 
 		mockRepo := mocks.NewMockRepository(t)
 		mockTx := interfacesMocks.NewMockTx(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
+		core, logs := observer.New(zap.ErrorLevel)
+		mockLogger := zap.New(core)
 
 		ctx := t.Context()
 		userID := int32(123)
@@ -1076,32 +837,8 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 			BeginTransaction(ctx).
 			Return(mockTx, nil)
 
-		db, sqlMock, err := helpers.SQLMockTest(t)
+		_, sqlMock, err := helpers.SQLMockTest(t)
 		require.NoError(t, err)
-
-		sqlMock.ExpectQuery(`SELECT pg_try_advisory_xact_lock($1, $2)`).
-			WithArgs(int64(lockTypeCreateOrderWithdraw), int64(userID)).
-			WillReturnRows(
-				sqlmock.NewRows([]string{"pg_try_advisory_xact_lock"}).
-					AddRow(true),
-			)
-
-		row := db.QueryRow(
-			"SELECT pg_try_advisory_xact_lock($1, $2)",
-			int64(lockTypeCreateOrderWithdraw),
-			int64(userID),
-		)
-
-		mockTx.EXPECT().
-			QueryRowContext(
-				mock2.Anything,
-				"SELECT pg_try_advisory_xact_lock($1, $2);",
-				[]any{
-					int64(lockTypeCreateOrderWithdraw),
-					int64(userID),
-				},
-			).
-			Return(row)
 
 		mockRepo.EXPECT().
 			UserBalance(mock2.Anything, userID).
@@ -1124,8 +861,6 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 			Rollback().
 			Return(nil)
 
-		mockLogger.EXPECT().Error("ошибка Commit", mock2.Anything)
-
 		o := &Order{
 			repository: mockRepo,
 			logger:     mockLogger,
@@ -1137,6 +872,7 @@ func TestOrder_BalanceWithdraw(t *testing.T) {
 		assert.Equal(t, entities.InternalServerErrorType, errDomain.ErrorType)
 
 		require.NoError(t, sqlMock.ExpectationsWereMet())
+		assert.Equal(t, "ошибка Commit", logs.All()[0].Message)
 	})
 }
 
@@ -1162,15 +898,8 @@ func TestOrder_validateWithdraw(t *testing.T) {
 	t.Run("error - negative balance", func(t *testing.T) {
 		t.Parallel()
 
-		mockLogger := interfacesMocks.NewMockLogger(t)
-
-		mockLogger.EXPECT().
-			Error(
-				"У пользователя отрицательный баланс",
-				mock2.Anything,
-				mock2.Anything,
-			).
-			Once()
+		core, logs := observer.New(zap.ErrorLevel)
+		mockLogger := zap.New(core)
 
 		o := &Order{
 			logger: mockLogger,
@@ -1185,6 +914,7 @@ func TestOrder_validateWithdraw(t *testing.T) {
 		require.NotNil(t, errDomain)
 		assert.Equal(t, entities.PaymentRequiredErrorType, errDomain.ErrorType)
 		assert.Equal(t, "на счету недостаточно средств", errDomain.Text)
+		assert.Equal(t, "У пользователя отрицательный баланс", logs.All()[0].Message)
 	})
 
 	t.Run("error - zero withdraw sum", func(t *testing.T) {

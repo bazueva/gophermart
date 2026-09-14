@@ -7,7 +7,6 @@ import (
 
 	appCtx "github.com/bazueva/gofermart/internal/context"
 	"github.com/bazueva/gofermart/internal/domain/entities"
-	interfacesMocks "github.com/bazueva/gofermart/internal/interfaces/mocks"
 	"github.com/bazueva/gofermart/internal/middleware/mocks"
 	"github.com/stretchr/testify/assert"
 )
@@ -19,13 +18,12 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
 		expectedUserID := int32(123)
 		mockChecker.EXPECT().CheckJWTToken("valid-token").
 			Return(expectedUserID, nil).Once()
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			userID, _ := appCtx.UserIDFromContext(r.Context())
 
 			assert.Equal(t, expectedUserID, userID)
@@ -46,9 +44,8 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			t.Error("handler should not be called")
 		}))
 
@@ -65,9 +62,8 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			t.Error("handler should not be called")
 		}))
 
@@ -85,9 +81,8 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			t.Error("handler should not be called")
 		}))
 
@@ -105,7 +100,6 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
 		domainErr := entities.NewUnauthorizedError(nil, "токен недействителен")
 		mockChecker.EXPECT().
@@ -113,7 +107,7 @@ func TestAuthorization(t *testing.T) {
 			Return(int32(0), domainErr).
 			Once()
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			t.Error("handler should not be called")
 		}))
 
@@ -131,7 +125,6 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
 		domainErr := entities.NewInternalServerError(nil, "")
 		mockChecker.EXPECT().
@@ -139,7 +132,7 @@ func TestAuthorization(t *testing.T) {
 			Return(int32(0), domainErr).
 			Once()
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			t.Error("handler should not be called")
 		}))
 
@@ -157,7 +150,6 @@ func TestAuthorization(t *testing.T) {
 		t.Parallel()
 
 		mockChecker := mocks.NewMockCheckerJWTToken(t)
-		mockLogger := interfacesMocks.NewMockLogger(t)
 
 		expectedUserID := int32(456)
 		mockChecker.EXPECT().
@@ -165,7 +157,7 @@ func TestAuthorization(t *testing.T) {
 			Return(expectedUserID, nil).
 			Once()
 
-		handler := Authorization(mockChecker, mockLogger)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler := Authorization(mockChecker)(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			userID, _ := appCtx.UserIDFromContext(r.Context())
 
 			assert.Equal(t, expectedUserID, userID)

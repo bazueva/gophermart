@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/bazueva/gofermart/internal/interfaces"
 	"github.com/go-chi/chi/v5/middleware"
 	"go.uber.org/zap"
 )
 
 // ServerLogger middleware для логирования запросов.
-func ServerLogger(logger interfaces.Logger) func(next http.Handler) http.Handler {
+func ServerLogger(logger *zap.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
